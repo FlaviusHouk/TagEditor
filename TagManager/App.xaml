@@ -23,7 +23,7 @@
 		<BitmapImage UriSource="Resources/close.png" x:Key="CloseImage"/>
 		<BitmapImage UriSource="Resources/maximize.png" x:Key="MaxImage"/>
 		<BitmapImage UriSource="Resources/minimize.png" x:Key="MinImage"/>
-        <BitmapImage UriSource="Resources/12.jpg" x:Key="MainImage"/>
+        <BitmapImage UriSource="Resources/cover.jpg" x:Key="MainImage"/>
 
         <ControlTemplate TargetType="Window" x:Key="CustomWindow">
 			<Border BorderBrush="#1CA389" BorderThickness="2">
