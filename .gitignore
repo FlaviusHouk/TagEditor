@@ -66,3 +66,7 @@ ipch/
 *.vsp
 *.vspx
 
+/.vs/TagManager/v15/Server/sqlite3/storage.ide-wal
+/.vs/TagManager/v15/Server/sqlite3/storage.ide-shm
+/.vs/TagManager/v15/Server/sqlite3/storage.ide
+/.vs/TagManager/v15/Server/sqlite3/db.lock
