@@ -60,7 +60,6 @@ namespace TagManager.ViewModel
             {
                 return _openDialogCommand ?? (_openDialogCommand = new RelayCommand(() =>
                   {
-
                   }));
             }
         }
