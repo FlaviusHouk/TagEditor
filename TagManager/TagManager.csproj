@@ -83,6 +83,7 @@
     </ApplicationDefinition>
     <Compile Include="Controls\CustomWindow.cs" />
     <Compile Include="Converters\DoubleToMarginConverter.cs" />
+    <Compile Include="ViewModel\TrackViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="WebRequest\DisplayDoc.cs" />

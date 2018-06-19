@@ -41,46 +41,32 @@ namespace ID3v2
 
         public Tag(Stream file)
         {
-            
+
         }
 
-        public string Title
-        {
-            get
-            {
-                return PrintFrameData("TIT2");
-            }
-        }
+        #region DataProperties
 
         public string Album
         {
             get
             {
-                return PrintFrameData("TALB");
-            } 
-        }
-
-        public string Artist
-        {
-            get
-            {
-                return PrintFrameData("TPE1");
-            }
-        } 
-
-        public string Year
-        {
-            get
-            {
-                return PrintFrameData("TYER");
+                return GetFrameDataAsString("TALB");
             }
         }
 
-        public string TrackNumber
+        public string Tempo
         {
             get
             {
-                return PrintFrameData("TRCK");
+                return GetFrameDataAsString("TBPM");
+            }
+        }
+
+        public string Composer
+        {
+            get
+            {
+                return GetFrameDataAsString("TCOM");
             }
         }
 
@@ -88,7 +74,7 @@ namespace ID3v2
         {
             get
             {
-                return PrintFrameData("TCON");
+                return GetFrameDataAsString("TCON");
             }
         }
 
@@ -96,19 +82,287 @@ namespace ID3v2
         {
             get
             {
-                return PrintFrameData("TCOP");
+                return GetFrameDataAsString("TCOP");
             }
         }
 
-        /*public byte[] Image
+        public string RecodringDate
         {
             get
             {
-
+                return GetFrameDataAsString("TDAT");
             }
-        }*/
+        }
 
-        private string PrintFrameData(string name)
+        public string PlaylistDelay
+        {
+            get
+            {
+                return GetFrameDataAsString("TDLY");
+            }
+        }
+
+        public string EncodedBy
+        {
+            get
+            {
+                return GetFrameDataAsString("TENC");
+            }
+        }
+
+        public string Lyrics
+        {
+            get
+            {
+                return GetFrameDataAsString("TEXT");
+            }
+        }
+
+        public string FileType
+        {
+            get
+            {
+                return GetFrameDataAsString("TFLT");
+            }
+        }
+
+        public string RecordingTime
+        {
+            get
+            {
+                return GetFrameDataAsString("TIME");
+            }
+        }
+
+        public string ContentGroup
+        {
+            get
+            {
+                return GetFrameDataAsString("TIT1");
+            }
+        }
+
+        public string Title
+        {
+            get
+            {
+                return GetFrameDataAsString("TIT2");
+            }
+        }
+
+        public string SubTitle
+        {
+            get
+            {
+                return GetFrameDataAsString("TIT3");
+            }
+        }
+
+        public string Key
+        {
+            get
+            {
+                return GetFrameDataAsString("TKEY");
+            }
+        }
+
+        public string Language
+        {
+            get
+            {
+                return GetFrameDataAsString("TLAN");
+            }
+        }
+
+        /// <summary>
+        /// Song length in milisecons.
+        /// </summary>
+        public int Length
+        {
+            get
+            {
+                return int.Parse(GetFrameDataAsString("TLEN"));
+            }
+        }
+
+        public string MediaType
+        {
+            get
+            {
+                return GetFrameDataAsString("TMED");
+            }
+        }
+
+        public string OriginalName
+        {
+            get
+            {
+                return GetFrameDataAsString("TOAL");
+            }
+        }
+
+        public string OriginalFileName
+        {
+            get
+            {
+                return GetFrameDataAsString("TOFN");
+            }
+        }
+
+        public string OriginalLyrics
+        {
+            get
+            {
+                return GetFrameDataAsString("TOLY");
+            }
+        }
+
+        public string OriginalAuthor
+        {
+            get
+            {
+                return GetFrameDataAsString("TOPE");
+            }
+        }
+
+        public string OriginalReleaseYear
+        {
+            get
+            {
+                return GetFrameDataAsString("TORY");
+            }
+        }
+
+        public string FileOwner
+        {
+            get
+            {
+                return GetFrameDataAsString("TOWN");
+            }
+        }
+
+        public string Artist
+        {
+            get
+            {
+                return GetFrameDataAsString("TPE1");
+            }
+        }
+        
+        public string Accompaniment
+        {
+            get
+            {
+                return GetFrameDataAsString("TPE2");
+            }
+        } 
+
+        public string Conductor
+        {
+            get
+            {
+                return GetFrameDataAsString("TPE3");
+            }
+        }
+
+        public string RemixAuthor
+        {
+            get
+            {
+                return GetFrameDataAsString("TPE4");
+            }
+        }
+
+        public string PartOfASet
+        {
+            get
+            {
+                return GetFrameDataAsString("TPOS");
+            }
+        }
+
+        public string Publisher
+        {
+            get
+            {
+                return GetFrameDataAsString("TPUB");
+            }
+        }
+
+        public string TrackNumber
+        {
+            get
+            {
+                return GetFrameDataAsString("TRCK");
+            }
+        }
+
+        public string FullDate
+        {
+            get
+            {
+                return GetFrameDataAsString("TRDA");
+            }
+        }
+
+        public string RadiostationName
+        {
+            get
+            {
+                return GetFrameDataAsString("TRSN");
+            }
+        }
+       
+        public string RadiostationOwner
+        {
+            get
+            {
+                return GetFrameDataAsString("TRSO");
+            }
+        }
+        
+        public string MediaSize
+        {
+            get
+            {
+                return GetFrameDataAsString("TSIZ");
+            }
+        }
+
+        public string ISRC
+       {
+            get
+            {
+                return GetFrameDataAsString("TSRC");
+            }
+        }
+
+        public string HardwareSettings
+        {
+            get
+            {
+                return GetFrameDataAsString("TSSE");
+            }
+        }
+
+        public string Year
+        {
+            get
+            {
+                return GetFrameDataAsString("TYER");
+            }
+        }
+
+        public byte[] Image
+        {
+            get
+            {
+                return _frames.FirstOrDefault(f => string.Compare(f.Header.Title, "APIC", StringComparison.OrdinalIgnoreCase) == 0)?.Data;
+            }
+        }
+        #endregion
+
+        private string GetFrameDataAsString(string name)
         {
             Frame cur = _frames.FirstOrDefault(f => string.Compare(f.Header.Title, name, StringComparison.OrdinalIgnoreCase) == 0);
 
