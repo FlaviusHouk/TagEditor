@@ -36,16 +36,9 @@
                 x:Name="s"
                 Storyboard.TargetName="dock"
                 Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" />
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0" />
             </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="dock" Storyboard.TargetProperty="(UIElement.Visibility)">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="image" Storyboard.TargetProperty="(UIElement.Visibility)">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}" />
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
 
         <Storyboard x:Key="DataToImageAnimation">
@@ -57,76 +50,56 @@
                 <EasingDoubleKeyFrame KeyTime="0" Value="0" />
                 <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type Window}, Mode=FindAncestor}}" />
             </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="dock">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}"/>
-            </ObjectAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="image">
-                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Visible}"/>
-            </ObjectAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
 
 
-    <DockPanel>
+    <DockPanel >
         <Border
             BorderBrush="Gray"
             BorderThickness="1"
             DockPanel.Dock="Bottom">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100*" />
-                    <ColumnDefinition Width="100*" />
-                    <ColumnDefinition Width="250*" />
-                    <ColumnDefinition Width="200*" />
-                    <ColumnDefinition Width="50*" />
+                    <ColumnDefinition Width="100*"/>
+                    <ColumnDefinition Width="100*"/>
+                    <ColumnDefinition Width="250*"/>
+                    <ColumnDefinition Width="200*"/>
+                    <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-                <Image
-                    x:Name="image1"
-                    Grid.Column="0"
-                    Source="{Binding Source}" />
-                <StackPanel
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    Margin="5,10"
-                    VerticalAlignment="Center">
+                <Image Grid.Column="0"
+                        x:Name="image1"
+                        Source="{Binding Source}">
+                </Image>
+                <StackPanel Grid.Column="1" Margin="5,10"
+                        VerticalAlignment="Center" Grid.ColumnSpan="2">
                     <TextBlock
-                        FontFamily="Italic"
-                        FontSize="20"
-                        Text="Some song" />
+                            FontFamily="Italic"
+                            FontSize="20"
+                            Text="Some song" />
                     <TextBlock Text="Some singer" />
                 </StackPanel>
 
-                <StackPanel
-                    Grid.Column="2"
-                    Margin="46,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="46,0">
                     <Button>
-                        <Image Source="{StaticResource PrevTrackImage}" />
+                        <Image Source="{StaticResource PrevTrackImage}"/>
                     </Button>
                     <Button>
-                        <Image Source="{StaticResource PlayImage}" />
+                        <Image Source="{StaticResource PlayImage}"/>
                     </Button>
                     <Button>
-                        <Image Source="{StaticResource NextTrackImage}" />
+                        <Image Source="{StaticResource NextTrackImage}"/>
                     </Button>
                 </StackPanel>
-
-                <Button
-                    Grid.Column="4"
-                    Margin="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+                
+                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="4" Margin="1">
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="Black" />
-                            <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}"/>
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#1CA389" />
+                                    <Setter Property="Foreground" Value="#1CA389"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -134,28 +107,28 @@
                     <StackPanel Background="Transparent">
                         <StackPanel.Resources>
                             <Style TargetType="Rectangle">
-                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                <Setter Property="Height" Value="5" />
-                                <Setter Property="Width" Value="30" />
-                                <Setter Property="Margin" Value="3,0,0,0" />
+                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}"/>
+                                <Setter Property="Height" Value="5"/>
+                                <Setter Property="Width" Value="30"/>
+                                <Setter Property="Margin" Value="3,0,0,0"/>
                             </Style>
                             <Style TargetType="Ellipse">
-                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                <Setter Property="Height" Value="5" />
-                                <Setter Property="Width" Value="5" />
+                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}"/>
+                                <Setter Property="Height" Value="5"/>
+                                <Setter Property="Width" Value="5"/>
                             </Style>
                         </StackPanel.Resources>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
+                        <StackPanel Orientation="Horizontal" Margin="3">
+                            <Ellipse/>
+                            <Rectangle/>
                         </StackPanel>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
+                        <StackPanel Orientation="Horizontal" Margin="3">
+                            <Ellipse/>
+                            <Rectangle/>
                         </StackPanel>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
+                        <StackPanel Orientation="Horizontal" Margin="3">
+                            <Ellipse/>
+                            <Rectangle/>
                         </StackPanel>
                     </StackPanel>
                 </Button>
@@ -167,14 +140,12 @@
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="0*" />
             </Grid.ColumnDefinitions>
-            <DockPanel
+            <DockPanel Background="Black"
                 x:Name="dock"
                 Grid.Column="1"
                 Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
-                Background="Black"
                 LastChildFill="True"
-                RenderTransformOrigin="0.5,0.5"
-                Visibility="Collapsed">
+                RenderTransformOrigin="0.5,0.5">
                 <DockPanel.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
