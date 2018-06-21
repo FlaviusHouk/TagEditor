@@ -69,6 +69,14 @@
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
+    <controls:CustomWindow.Triggers>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button1">
+            <BeginStoryboard Storyboard="{StaticResource DataToImageAnimation}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button">
+            <BeginStoryboard Storyboard="{StaticResource ImageToDataAnimation}" />
+        </EventTrigger>
+    </controls:CustomWindow.Triggers>
 
 
     <DockPanel>
@@ -117,50 +125,63 @@
                     </Button>
                 </StackPanel>
 
-                <Button
+                <Grid
                     Grid.Column="4"
                     Margin="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Foreground" Value="Black" />
-                            <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#1CA389" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <StackPanel Background="Transparent">
-                        <StackPanel.Resources>
-                            <Style TargetType="Rectangle">
-                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                <Setter Property="Height" Value="5" />
-                                <Setter Property="Width" Value="30" />
-                                <Setter Property="Margin" Value="3,0,0,0" />
+                    <Button
+                        x:Name="button"
+                        Command="{Binding ChangeModeCommand}"
+                        CommandParameter="false"
+                        Visibility="{Binding IsPlayerMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Foreground" Value="Black" />
+                                <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Foreground" Value="#1CA389" />
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
-                            <Style TargetType="Ellipse">
-                                <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
-                                <Setter Property="Height" Value="5" />
-                                <Setter Property="Width" Value="5" />
-                            </Style>
-                        </StackPanel.Resources>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
+                        </Button.Style>
+                        <StackPanel Background="Transparent">
+                            <StackPanel.Resources>
+                                <Style TargetType="Rectangle">
+                                    <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                    <Setter Property="Height" Value="5" />
+                                    <Setter Property="Width" Value="30" />
+                                    <Setter Property="Margin" Value="3,0,0,0" />
+                                </Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
+                                    <Setter Property="Height" Value="5" />
+                                    <Setter Property="Width" Value="5" />
+                                </Style>
+                            </StackPanel.Resources>
+                            <StackPanel Margin="3" Orientation="Horizontal">
+                                <Ellipse />
+                                <Rectangle />
+                            </StackPanel>
+                            <StackPanel Margin="3" Orientation="Horizontal">
+                                <Ellipse />
+                                <Rectangle />
+                            </StackPanel>
+                            <StackPanel Margin="3" Orientation="Horizontal">
+                                <Ellipse />
+                                <Rectangle />
+                            </StackPanel>
                         </StackPanel>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
-                        </StackPanel>
-                        <StackPanel Margin="3" Orientation="Horizontal">
-                            <Ellipse />
-                            <Rectangle />
-                        </StackPanel>
-                    </StackPanel>
-                </Button>
+                    </Button>
+                    <Button
+                        x:Name="button1"
+                        Command="{Binding ChangeModeCommand}"
+                        CommandParameter="true"
+                        Visibility="{Binding IsPlayerMode, Converter={StaticResource AntiBoolToVisibilityConverter}}">
+                        <Image RenderOptions.BitmapScalingMode="HighQuality" Width="30" Source="{StaticResource MusicImage}" />
+                    </Button>
+                </Grid>
             </Grid>
         </Border>
         <Grid x:Name="grid1">
@@ -184,11 +205,6 @@
                         <TranslateTransform X="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ActualWidth}" />
                     </TransformGroup>
                 </DockPanel.RenderTransform>
-                <DockPanel.Triggers>
-                    <EventTrigger RoutedEvent="MouseDown">
-                        <BeginStoryboard x:Name="DataToImageAnimation_BeginStoryboard" Storyboard="{StaticResource DataToImageAnimation}" />
-                    </EventTrigger>
-                </DockPanel.Triggers>
                 <StackPanel
                     VerticalAlignment="Center"
                     DataContext="{Binding TempTrack}"
@@ -242,11 +258,6 @@
                         <TranslateTransform />
                     </TransformGroup>
                 </Image.RenderTransform>
-                <Image.Triggers>
-                    <EventTrigger RoutedEvent="MouseDown">
-                        <BeginStoryboard x:Name="ImageToDataAnimation_BeginStoryboard" Storyboard="{StaticResource ImageToDataAnimation}" />
-                    </EventTrigger>
-                </Image.Triggers>
             </Image>
         </Grid>
     </DockPanel>

@@ -12,7 +12,7 @@ namespace TagManager.ViewModel
     public class MainViewModel : ViewModelBase
     {
         #region Fields
-
+        private bool _isPlayerMode = true;
 
         #endregion
 
@@ -36,7 +36,15 @@ namespace TagManager.ViewModel
             }
         }
 
-
+        public bool IsPlayerMode
+        {
+            get { return _isPlayerMode; }
+            set
+            {
+                _isPlayerMode = value;
+                RaisePropertyChanged(nameof(IsPlayerMode));
+            }
+        }
         #endregion
 
         #region Commands
@@ -44,6 +52,8 @@ namespace TagManager.ViewModel
         private RelayCommand _nextTrackcomaand;
         private RelayCommand _openDialogCommand;
         private RelayCommand<object> _selectionChangedCommand;
+        private RelayCommand<bool> _changeModeCommand;
+
 
         public RelayCommand NextTrackCommand
         {
@@ -90,6 +100,17 @@ namespace TagManager.ViewModel
                   {
                       SelectedItems = (items as IEnumerable<object>).Cast<TrackViewModel>().ToList();
                       RaisePropertyChanged(nameof(TempTrack));
+                  }));
+            }
+        }
+
+        public RelayCommand<bool> ChangeModeCommand
+        {
+            get
+            {
+                return _changeModeCommand ?? (_changeModeCommand = new RelayCommand<bool>((val) =>
+                  {
+                      IsPlayerMode = val;
                   }));
             }
         }

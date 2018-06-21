@@ -15,6 +15,8 @@
         <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
 
         <conv:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <conv:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
 
         <BitmapImage x:Key="NextTrackImage" UriSource="Resources/nextTrack.png" />
         <BitmapImage x:Key="PrevTrackImage" UriSource="Resources/preTrack.png" />
@@ -23,11 +25,12 @@
         <BitmapImage x:Key="CloseImage" UriSource="Resources/close.png" />
         <BitmapImage x:Key="MaxImage" UriSource="Resources/maximize.png" />
         <BitmapImage x:Key="MinImage" UriSource="Resources/minimize.png" />
-        <BitmapImage x:Key="MainImage" UriSource="Resources/cover.jpg" />
+        <BitmapImage x:Key="MainImage" UriSource="Resources/1.jpg" />
         <BitmapImage x:Key="OpenImage" UriSource="Resources/open.png" />
         <BitmapImage x:Key="FolderImage" UriSource="Resources/folder.png" />
         <BitmapImage x:Key="ApplyImage" UriSource="Resources/apply.png" />
         <BitmapImage x:Key="CancelImage" UriSource="Resources/cancel.png" />
+        <BitmapImage x:Key="MusicImage" UriSource="Resources/music.png" />
 
         <ControlTemplate x:Key="CustomWindow" TargetType="Window">
             <Border BorderBrush="#1CA389" BorderThickness="2">

@@ -82,6 +82,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CustomWindow.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DoubleToMarginConverter.cs" />
     <Compile Include="ViewModel\FolderViewModel.cs" />
     <Compile Include="ViewModel\OpenFoldersDialogViewModel.cs" />
@@ -181,6 +182,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\music.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
