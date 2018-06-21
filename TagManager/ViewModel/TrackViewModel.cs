@@ -316,7 +316,7 @@ namespace TagManager.ViewModel
             _fullDate = trackTag.FullDate;
             _mediaSize = trackTag.MediaSize;
             _ISRC = trackTag.ISRC;
-            _year = Convert.ToInt32(trackTag.Year);
+            _year = Convert.ToInt32(trackTag.Year == "" ? 0.ToString() : trackTag.Year);
         }
     }
 }

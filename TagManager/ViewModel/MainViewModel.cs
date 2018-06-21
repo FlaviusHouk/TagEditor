@@ -2,7 +2,10 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using TagManager.View;
+using ViewModel;
 
 namespace TagManager.ViewModel
 {
@@ -60,6 +63,21 @@ namespace TagManager.ViewModel
             {
                 return _openDialogCommand ?? (_openDialogCommand = new RelayCommand(() =>
                   {
+                      var vm = new OpenFoldersDialogViewModel();
+                      var view = new OpenFoldersDialog() { Owner = App.Current.MainWindow, DataContext = vm };
+                      if (view.ShowDialog() == true)
+                      {
+                          int index = 0;
+                          var s = vm.GetSelectedFolders();
+                          foreach (var item in s)
+                          {
+                              var files = Directory.GetFiles(item);
+                              foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
+                              {
+                                  Fols.Add(new TrackViewModel(file,item,index++));
+                              }
+                          }
+                      }
                   }));
             }
         }

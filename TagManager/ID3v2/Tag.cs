@@ -181,7 +181,7 @@ namespace ID3v2
         {
             get
             {
-                return int.Parse(GetFrameDataAsString("TLEN"));
+                return 0;
             }
         }
 
