@@ -68,13 +68,59 @@
                 <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Visible}" />
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
+        <Storyboard x:Key="ListButtonAnimation">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle1" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.05" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="rectangle2" Storyboard.TargetProperty="(FrameworkElement.Width)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="30" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="30" />
+            </DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rectangle" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}" />
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rectangle1" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}" />
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="rectangle2" Storyboard.TargetProperty="(UIElement.Visibility)">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Collapsed}" />
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.1" Value="{x:Static Visibility.Visible}" />
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="MusicPlayerButtonAnimation">
+            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="button1">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
+                <EasingPointKeyFrame KeyTime="0:0:0.4" Value="0.5,0.5"/>
+            </PointAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="button1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
     <controls:CustomWindow.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button1">
-            <BeginStoryboard Storyboard="{StaticResource DataToImageAnimation}" />
+            <BeginStoryboard HandoffBehavior="Compose" Storyboard="{StaticResource DataToImageAnimation}" />
         </EventTrigger>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button">
-            <BeginStoryboard Storyboard="{StaticResource ImageToDataAnimation}" />
+            <BeginStoryboard HandoffBehavior="Compose" Storyboard="{StaticResource ImageToDataAnimation}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter" SourceName="stackPanel">
+            <BeginStoryboard
+                x:Name="ListButtonAnimation_BeginStoryboard"
+                HandoffBehavior="Compose"
+                Storyboard="{StaticResource ListButtonAnimation}" />
+        </EventTrigger>
+        <EventTrigger RoutedEvent="UIElement.MouseEnter" SourceName="button1">
+            <BeginStoryboard HandoffBehavior="Compose" Storyboard="{StaticResource MusicPlayerButtonAnimation}" />
         </EventTrigger>
     </controls:CustomWindow.Triggers>
 
@@ -146,7 +192,10 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
-                        <StackPanel Background="Transparent">
+                        <StackPanel
+                            x:Name="stackPanel"
+                            Width="40"
+                            Background="Transparent">
                             <StackPanel.Resources>
                                 <Style TargetType="Rectangle">
                                     <Setter Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=Foreground}" />
@@ -162,15 +211,15 @@
                             </StackPanel.Resources>
                             <StackPanel Margin="3" Orientation="Horizontal">
                                 <Ellipse />
-                                <Rectangle />
+                                <Rectangle x:Name="rectangle" />
                             </StackPanel>
                             <StackPanel Margin="3" Orientation="Horizontal">
                                 <Ellipse />
-                                <Rectangle />
+                                <Rectangle x:Name="rectangle1" />
                             </StackPanel>
                             <StackPanel Margin="3" Orientation="Horizontal">
                                 <Ellipse />
-                                <Rectangle />
+                                <Rectangle x:Name="rectangle2" />
                             </StackPanel>
                         </StackPanel>
                     </Button>
@@ -179,6 +228,14 @@
                         Command="{Binding ChangeModeCommand}"
                         CommandParameter="true"
                         Visibility="{Binding IsPlayerMode, Converter={StaticResource AntiBoolToVisibilityConverter}}">
+                        <Button.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Button.RenderTransform>
                         <Image
                             Width="30"
                             RenderOptions.BitmapScalingMode="HighQuality"
