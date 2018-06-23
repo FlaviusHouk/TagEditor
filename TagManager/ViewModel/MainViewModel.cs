@@ -2,14 +2,17 @@
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using TagManager.View;
+using ViewModel;
 
 namespace TagManager.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
         #region Fields
-
+        private bool _isPlayerMode = true;
 
         #endregion
 
@@ -33,7 +36,15 @@ namespace TagManager.ViewModel
             }
         }
 
-
+        public bool IsPlayerMode
+        {
+            get { return _isPlayerMode; }
+            set
+            {
+                _isPlayerMode = value;
+                RaisePropertyChanged(nameof(IsPlayerMode));
+            }
+        }
         #endregion
 
         #region Commands
@@ -41,6 +52,8 @@ namespace TagManager.ViewModel
         private RelayCommand _nextTrackcomaand;
         private RelayCommand _openDialogCommand;
         private RelayCommand<object> _selectionChangedCommand;
+        private RelayCommand<bool> _changeModeCommand;
+
 
         public RelayCommand NextTrackCommand
         {
@@ -60,6 +73,21 @@ namespace TagManager.ViewModel
             {
                 return _openDialogCommand ?? (_openDialogCommand = new RelayCommand(() =>
                   {
+                      var vm = new OpenFoldersDialogViewModel();
+                      var view = new OpenFoldersDialog() { Owner = App.Current.MainWindow, DataContext = vm };
+                      if (view.ShowDialog() == true)
+                      {
+                          int index = 0;
+                          var s = vm.GetSelectedFolders();
+                          foreach (var item in s)
+                          {
+                              var files = Directory.GetFiles(item);
+                              foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
+                              {
+                                  Fols.Add(new TrackViewModel(file,item,index++));
+                              }
+                          }
+                      }
                   }));
             }
         }
@@ -72,6 +100,17 @@ namespace TagManager.ViewModel
                   {
                       SelectedItems = (items as IEnumerable<object>).Cast<TrackViewModel>().ToList();
                       RaisePropertyChanged(nameof(TempTrack));
+                  }));
+            }
+        }
+
+        public RelayCommand<bool> ChangeModeCommand
+        {
+            get
+            {
+                return _changeModeCommand ?? (_changeModeCommand = new RelayCommand<bool>((val) =>
+                  {
+                      IsPlayerMode = val;
                   }));
             }
         }
