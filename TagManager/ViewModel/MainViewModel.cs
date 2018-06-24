@@ -36,7 +36,7 @@ namespace TagManager.ViewModel
                 {
                     return null;
                 }
-                return SelectedItems.Count == 1 ? SelectedItems.FirstOrDefault() : GenerateTempTrack();
+                return SelectedItems.Count != 0 ? SelectedItems.FirstOrDefault() : GenerateTempTrack();
             }
         }
 

@@ -360,7 +360,22 @@ namespace ID3v2
         {
             get
             {
-                return _frames.FirstOrDefault(f => string.Compare(f.Header.Title, "APIC", StringComparison.OrdinalIgnoreCase) == 0)?.Data;
+                byte[] data = _frames.FirstOrDefault(f => string.Compare(f.Header.Title, "APIC", StringComparison.OrdinalIgnoreCase) == 0)?.Data;
+
+                int i = 1;
+                for (int j = 0; j < 2; j++)
+                {
+                    for (; i < data.Length; i++)
+                    {
+                        if (data[i] == 0)
+                            break;
+                    }
+                    i++;
+                }
+
+                string type = EncodeHelper.EncodeByteArray(data.Take(i).ToArray());
+
+                return data.Skip(i).ToArray();
             }
         }
         #endregion

@@ -82,6 +82,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CustomWindow.cs" />
+    <Compile Include="Converters\ArrayToImageConverter.cs" />
     <Compile Include="Controls\MaskedTextBox.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DoubleToMarginConverter.cs" />

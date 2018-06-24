@@ -14,7 +14,7 @@ namespace ID3v2
 
             for (int i = 0; i < rawData.Length; i++)
             {
-                toRet = toRet << 7;
+                toRet = toRet << 8;
                 toRet |= rawData[i];
             }
 

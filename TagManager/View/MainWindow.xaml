@@ -416,7 +416,7 @@
                 x:Name="image"
                 Grid.Column="1"
                 RenderTransformOrigin="0.5,0.5"
-                Source="{StaticResource MainImage}">
+                Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}">
                 <Image.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />

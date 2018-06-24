@@ -34,6 +34,8 @@ namespace TagManager.ViewModel
         private string _ISRC;
         private string _subTitle;
         private int _year;
+
+        private byte[] _image;
         #endregion
 
         #region Properties
@@ -58,7 +60,7 @@ namespace TagManager.ViewModel
             }
         }
 
-        
+
         public string Holder
         {
             get { return _holder; }
@@ -175,7 +177,7 @@ namespace TagManager.ViewModel
             set
             {
                 _key = value;
-                RaisePropertyChanged(nameof(Key));                
+                RaisePropertyChanged(nameof(Key));
             }
         }
 
@@ -278,6 +280,14 @@ namespace TagManager.ViewModel
                 RaisePropertyChanged(nameof(SubTitle));
             }
         }
+
+        public byte[] Image
+        {
+            get
+            {
+                return _image;
+            }
+        }
         #endregion
 
         public TrackViewModel(string path, string folder, int id)
@@ -321,6 +331,7 @@ namespace TagManager.ViewModel
             _mediaSize = trackTag.MediaSize;
             _ISRC = trackTag.ISRC;
             _year = Convert.ToInt32(trackTag.Year == "" ? 0.ToString() : trackTag.Year);
+            _image = trackTag.Image;
         }
     }
 }

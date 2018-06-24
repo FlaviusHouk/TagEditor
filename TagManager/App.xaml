@@ -17,6 +17,7 @@
         <conv:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <conv:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
+        <conv:ArrayToImageConverter x:Key="ArrayToImageConverter"/>
 
         <BitmapImage x:Key="NextTrackImage" UriSource="Resources/nextTrack.png" />
         <BitmapImage x:Key="PrevTrackImage" UriSource="Resources/preTrack.png" />
@@ -25,7 +26,7 @@
         <BitmapImage x:Key="CloseImage" UriSource="Resources/close.png" />
         <BitmapImage x:Key="MaxImage" UriSource="Resources/maximize.png" />
         <BitmapImage x:Key="MinImage" UriSource="Resources/minimize.png" />
-        <BitmapImage x:Key="MainImage" UriSource="Resources/1.jpg" />
+        <BitmapImage x:Key="MainImage" UriSource="Resources/12.jpg" />
         <BitmapImage x:Key="OpenImage" UriSource="Resources/open.png" />
         <BitmapImage x:Key="FolderImage" UriSource="Resources/folder.png" />
         <BitmapImage x:Key="ApplyImage" UriSource="Resources/apply.png" />
