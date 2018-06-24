@@ -181,7 +181,10 @@ namespace ID3v2
         {
             get
             {
-                return 0;
+                string retVal = GetFrameDataAsString("TLEN");
+                int toRet;
+
+                return int.TryParse(retVal, out toRet) ? toRet : 0;
             }
         }
 
