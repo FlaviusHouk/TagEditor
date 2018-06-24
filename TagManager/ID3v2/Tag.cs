@@ -14,7 +14,35 @@ namespace ID3v2
 
         public Tag(string path)
         {
-            FileStream file = File.OpenRead(path);
+            using (FileStream file = File.OpenRead(path))
+            {
+                _frames = new List<Frame>();
+
+                byte[] header = new byte[10];
+                file.Read(header, 0, 10);
+                _header = new TagHeader(header);
+
+                int pos = 10;
+                while (pos < _header.Size)
+                {
+                    file.Read(header, 0, 10);
+                    pos += 10;
+                    FrameHeader head = new FrameHeader(header);
+                    if (head.Title.All(c => char.IsLetterOrDigit(c)))
+                    {
+                        byte[] data = new byte[head.Size];
+                        file.Read(data, 0, head.Size);
+                        Frame frame = new Frame(head, data);
+                        _frames.Add(frame);
+                    }
+
+                    pos += head.Size;
+                }
+            }
+        }
+
+        public Tag(Stream file)
+        {
             _frames = new List<Frame>();
 
             byte[] header = new byte[10];
@@ -37,11 +65,6 @@ namespace ID3v2
 
                 pos += head.Size;
             }
-        }
-
-        public Tag(Stream file)
-        {
-
         }
 
         #region DataProperties
