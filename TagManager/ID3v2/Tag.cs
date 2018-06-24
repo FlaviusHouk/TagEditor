@@ -50,7 +50,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TALB");
+                return GetFrameDataAsString("TALB").Trim('\0');
             }
         }
 
@@ -58,7 +58,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TBPM");
+                return GetFrameDataAsString("TBPM").Trim('\0');
             }
         }
 
@@ -66,7 +66,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCOM");
+                return GetFrameDataAsString("TCOM").Trim('\0');
             }
         }
 
@@ -74,7 +74,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCON");
+                return GetFrameDataAsString("TCON").Trim('\0');
             }
         }
 
@@ -82,7 +82,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCOP");
+                return GetFrameDataAsString("TCOP").Trim('\0');
             }
         }
 
@@ -90,7 +90,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TDAT");
+                return GetFrameDataAsString("TDAT").Trim('\0');
             }
         }
 
@@ -98,7 +98,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TDLY");
+                return GetFrameDataAsString("TDLY").Trim('\0');
             }
         }
 
@@ -106,7 +106,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TENC");
+                return GetFrameDataAsString("TENC").Trim('\0');
             }
         }
 
@@ -114,7 +114,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TEXT");
+                return GetFrameDataAsString("TEXT").Trim('\0');
             }
         }
 
@@ -122,7 +122,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TFLT");
+                return GetFrameDataAsString("TFLT").Trim('\0');
             }
         }
 
@@ -130,7 +130,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIME");
+                return GetFrameDataAsString("TIME").Trim('\0');
             }
         }
 
@@ -138,7 +138,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT1");
+                return GetFrameDataAsString("TIT1").Trim('\0');
             }
         }
 
@@ -146,7 +146,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT2");
+                return GetFrameDataAsString("TIT2").Trim('\0');
             }
         }
 
@@ -154,7 +154,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT3");
+                return GetFrameDataAsString("TIT3").Trim('\0');
             }
         }
 
@@ -162,7 +162,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TKEY");
+                return GetFrameDataAsString("TKEY").Trim('\0');
             }
         }
 
@@ -170,7 +170,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TLAN");
+                return GetFrameDataAsString("TLAN").Trim('\0');
             }
         }
 
@@ -181,7 +181,7 @@ namespace ID3v2
         {
             get
             {
-                string retVal = GetFrameDataAsString("TLEN");
+                string retVal = GetFrameDataAsString("TLEN").Trim('\0');
                 int toRet;
 
                 return int.TryParse(retVal, out toRet) ? toRet : 0;
@@ -192,7 +192,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TMED");
+                return GetFrameDataAsString("TMED").Trim('\0');
             }
         }
 
@@ -200,7 +200,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOAL");
+                return GetFrameDataAsString("TOAL").Trim('\0');
             }
         }
 
@@ -208,7 +208,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOFN");
+                return GetFrameDataAsString("TOFN").Trim('\0');
             }
         }
 
@@ -216,7 +216,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOLY");
+                return GetFrameDataAsString("TOLY").Trim('\0');
             }
         }
 
@@ -224,7 +224,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOPE");
+                return GetFrameDataAsString("TOPE").Trim('\0');
             }
         }
 
@@ -232,7 +232,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TORY");
+                return GetFrameDataAsString("TORY").Trim('\0');
             }
         }
 
@@ -240,7 +240,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOWN");
+                return GetFrameDataAsString("TOWN").Trim('\0');
             }
         }
 
@@ -248,7 +248,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE1");
+                return GetFrameDataAsString("TPE1").Trim('\0');
             }
         }
         
@@ -256,7 +256,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE2");
+                return GetFrameDataAsString("TPE2").Trim('\0');
             }
         } 
 
@@ -264,7 +264,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE3");
+                return GetFrameDataAsString("TPE3").Trim('\0');
             }
         }
 
@@ -272,7 +272,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE4");
+                return GetFrameDataAsString("TPE4").Trim('\0');
             }
         }
 
@@ -280,7 +280,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPOS");
+                return GetFrameDataAsString("TPOS").Trim('\0');
             }
         }
 
@@ -288,7 +288,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPUB");
+                return GetFrameDataAsString("TPUB").Trim('\0');
             }
         }
 
@@ -296,7 +296,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRCK");
+                return GetFrameDataAsString("TRCK").Trim('\0');
             }
         }
 
@@ -304,7 +304,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRDA");
+                return GetFrameDataAsString("TRDA").Trim('\0');
             }
         }
 
@@ -312,7 +312,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRSN");
+                return GetFrameDataAsString("TRSN").Trim('\0');
             }
         }
        
@@ -320,7 +320,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRSO");
+                return GetFrameDataAsString("TRSO").Trim('\0');
             }
         }
         
@@ -328,7 +328,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TSIZ");
+                return GetFrameDataAsString("TSIZ").Trim('\0');
             }
         }
 
@@ -336,7 +336,7 @@ namespace ID3v2
        {
             get
             {
-                return GetFrameDataAsString("TSRC");
+                return GetFrameDataAsString("TSRC").Trim('\0');
             }
         }
 
@@ -344,7 +344,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TSSE");
+                return GetFrameDataAsString("TSSE").Trim('\0');
             }
         }
 
@@ -352,7 +352,7 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TYER");
+                return GetFrameDataAsString("TYER").Trim('\0');
             }
         }
 
