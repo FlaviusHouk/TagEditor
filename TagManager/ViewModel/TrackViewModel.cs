@@ -284,7 +284,11 @@ namespace TagManager.ViewModel
         {
             var parts = path.Split('\\');
             _name = parts.LastOrDefault();
-            _holder = folder;
+
+            var s = folder.Split('\\');
+            var ss = s.Skip(s.Length -2);
+            _holder = $"...\\{ss.FirstOrDefault()}\\{ss.LastOrDefault()}";
+
             _id = id;
             _trackTag = new Tag(path);
             InitData(_trackTag);

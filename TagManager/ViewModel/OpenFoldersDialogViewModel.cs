@@ -47,6 +47,11 @@ namespace ViewModel
             }
         }
 
+        public bool CanOK
+        {
+            get { return SelectedListFolders.Any(); }
+        }
+
         public void SelectInListBox(FolderViewModel folderViewModel)
         {
             folderViewModel.IsSelected = true;
@@ -67,6 +72,7 @@ namespace ViewModel
                     {
                         SelectedListFolders.Add(fold);
                     }
+                    RaisePropertyChanged(nameof(CanOK));
                 }));
             }
         }
@@ -91,10 +97,14 @@ namespace ViewModel
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.Favorites)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)));
+            Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)));
 
             var drives = Environment.GetLogicalDrives();
-            Folders.Add(new FolderViewModel(drives.FirstOrDefault()));
-            Folders.Add(new FolderViewModel(Environment.GetLogicalDrives().LastOrDefault()));
+
+            foreach (var item in drives)
+            {
+                Folders.Add(new FolderViewModel(item));
+            }
         }
 
         private void GetAvgLength(IEnumerable<FolderViewModel> fw)

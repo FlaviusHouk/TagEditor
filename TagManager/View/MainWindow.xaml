@@ -18,7 +18,11 @@
     WindowStyle="None"
     mc:Ignorable="d ignore">
     <Window.Resources>
-        <CollectionViewSource x:Key="ItemsSource" Source="{Binding Fols}" />
+        <CollectionViewSource x:Key="ItemsSource" Source="{Binding Fols}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Holder" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
 
         <Style TargetType="Button">
             <Setter Property="Width" Value="50" />
@@ -96,13 +100,13 @@
             </ObjectAnimationUsingKeyFrames>
         </Storyboard>
         <Storyboard x:Key="MusicPlayerButtonAnimation">
-            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="button1">
-                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5"/>
-                <EasingPointKeyFrame KeyTime="0:0:0.4" Value="0.5,0.5"/>
+            <PointAnimationUsingKeyFrames Storyboard.TargetName="button1" Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)">
+                <EasingPointKeyFrame KeyTime="0" Value="0.5,0.5" />
+                <EasingPointKeyFrame KeyTime="0:0:0.4" Value="0.5,0.5" />
             </PointAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="button1">
-                <EasingDoubleKeyFrame KeyTime="0" Value="-1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1"/>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="button1" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-1" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1" />
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
@@ -265,45 +269,78 @@
                         <TranslateTransform X="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ActualWidth}" />
                     </TransformGroup>
                 </DockPanel.RenderTransform>
-                <StackPanel
-                    VerticalAlignment="Center"
-                    DataContext="{Binding TempTrack}"
-                    DockPanel.Dock="Right">
-                    <TextBlock Text="Тэги" />
-                    <TextBlock Text="ИСполнитель" />
-                    <TextBox Text="{Binding Artist}" />
-                    <TextBlock Text="Название" />
-                    <TextBox Text="{Binding Title}" />
-                    <TextBlock Text="Год" />
-                    <TextBox Text="{Binding Year}" />
 
-                </StackPanel>
+                <GroupBox DockPanel.Dock="Right" Header="Тэги">
+                    <StackPanel VerticalAlignment="Center" DataContext="{Binding TempTrack}">
 
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                    <Button Command="{Binding OpenDialogCommand}">
-                        <Image
-                            Width="32"
-                            RenderOptions.BitmapScalingMode="HighQuality"
-                            Source="{StaticResource OpenImage}" />
-                    </Button>
-                </StackPanel>
+                        <StackPanel.Resources>
 
-                <ListView ItemsSource="{Binding Source={StaticResource ItemsSource}}" SelectionMode="Extended">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}, Path=SelectedItems}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Artist}" Header="Artist" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" />
-                            <GridViewColumn DisplayMemberBinding="{Binding Year}" Header="Year" />
-                        </GridView>
-                    </ListView.View>
-                </ListView>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="FontSize" Value="15" />
+                                <Setter Property="Margin" Value="5" />
+                            </Style>
+
+                            <Style TargetType="TextBox">
+                                <Setter Property="FontSize" Value="15" />
+                                <Setter Property="Margin" Value="5" />
+                            </Style>
+
+                        </StackPanel.Resources>
+
+                        <TextBlock Text="Исполнитель" />
+                        <TextBox Text="{Binding Artist}" />
+                        <TextBlock Text="Название" />
+                        <TextBox Text="{Binding Title}" />
+                        <TextBlock Text="Год" />
+                        <TextBox Text="{Binding Year}" />
+
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox DockPanel.Dock="Top">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Command="{Binding OpenDialogCommand}">
+                            <Image
+                                Width="32"
+                                RenderOptions.BitmapScalingMode="HighQuality"
+                                Source="{StaticResource OpenImage}" />
+                        </Button>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Треки">
+                    <ListView
+                        BorderThickness="0"
+                        ItemsSource="{Binding Source={StaticResource ItemsSource}}"
+                        SelectionMode="Extended">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}, Path=SelectedItems}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListView.GroupStyle>
+                            <GroupStyle>
+                                <GroupStyle.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock
+                                            FontSize="14"
+                                            FontWeight="Bold"
+                                            Text="{Binding Name}" />
+                                    </DataTemplate>
+                                </GroupStyle.HeaderTemplate>
+                            </GroupStyle>
+                        </ListView.GroupStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Artist}" Header="Artist" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Year}" Header="Year" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
             </DockPanel>
             <Image
                 x:Name="image"

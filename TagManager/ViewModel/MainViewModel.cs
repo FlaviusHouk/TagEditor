@@ -1,9 +1,11 @@
-﻿using GalaSoft.MvvmLight;
+﻿using System;
+using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using TagManager.View;
 using ViewModel;
 
@@ -74,18 +76,16 @@ namespace TagManager.ViewModel
                 return _openDialogCommand ?? (_openDialogCommand = new RelayCommand(() =>
                   {
                       var vm = new OpenFoldersDialogViewModel();
-                      var view = new OpenFoldersDialog() { Owner = App.Current.MainWindow, DataContext = vm };
-                      if (view.ShowDialog() == true)
+                      var view = new OpenFoldersDialog() { Owner = Application.Current.MainWindow, DataContext = vm };
+                      if (view.ShowDialog() != true) return;
+                      int index = 1;
+                      var s = vm.GetSelectedFolders();
+                      foreach (var item in s)
                       {
-                          int index = 0;
-                          var s = vm.GetSelectedFolders();
-                          foreach (var item in s)
+                          var files = Directory.GetFiles(item);
+                          foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
                           {
-                              var files = Directory.GetFiles(item);
-                              foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
-                              {
-                                  Fols.Add(new TrackViewModel(file,item,index++));
-                              }
+                              Fols.Add(new TrackViewModel(file,item,index++));
                           }
                       }
                   }));
@@ -98,7 +98,7 @@ namespace TagManager.ViewModel
             {
                 return _selectionChangedCommand ?? (_selectionChangedCommand = new RelayCommand<object>((items) =>
                   {
-                      SelectedItems = (items as IEnumerable<object>).Cast<TrackViewModel>().ToList();
+                      SelectedItems = ((items as IEnumerable<object>) ?? throw new InvalidOperationException()).Cast<TrackViewModel>().ToList();
                       RaisePropertyChanged(nameof(TempTrack));
                   }));
             }
@@ -116,18 +116,11 @@ namespace TagManager.ViewModel
         }
         #endregion
 
-        public MainViewModel()
-        {
-        }
-
 
         private TrackViewModel GenerateTempTrack()
         {
             var temp = new TrackViewModel();
 
-            foreach (var item in SelectedItems)
-            {
-            }
             return temp;
         }
 

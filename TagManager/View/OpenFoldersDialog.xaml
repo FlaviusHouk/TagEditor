@@ -16,8 +16,21 @@
     WindowStartupLocation="CenterOwner"
     WindowStyle="None"
     mc:Ignorable="d">
-    <DockPanel LastChildFill="True">
-        <DockPanel.Resources>
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="1.5*" />
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="30*" />
+        </Grid.ColumnDefinitions>
+        
+        <Grid.Resources>
             <Style TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="BorderBrush" Value="Transparent" />
@@ -25,19 +38,32 @@
                 <Setter Property="Margin" Value="5" />
                 <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
             </Style>
-        </DockPanel.Resources>
+        </Grid.Resources>
+        
         <DockPanel
+            Grid.Row="0"
+            Grid.ColumnSpan="3"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Center"
-            DockPanel.Dock="Top">
+            VerticalAlignment="Center">
             <TextBlock Margin="5" Text="Path" />
             <TextBlock
                 Margin="5"
                 HorizontalAlignment="Stretch"
                 Text="{Binding CurrentFolderPath}" />
         </DockPanel>
-        <Grid Margin="10" DockPanel.Dock="Left">
-            <TreeView Margin="3,5,10,5" ItemsSource="{Binding Folders}">
+
+        <GridSplitter
+            Grid.Row="1"
+            Grid.Column="1"
+            Width="5"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch" />
+
+        <Grid
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            MinWidth="200">
+            <TreeView ItemsSource="{Binding Folders}" BorderThickness="0">
                 <TreeView.Resources>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -71,12 +97,15 @@
                 </TreeView.ItemTemplate>
             </TreeView>
         </Grid>
+        
         <StackPanel
+            Grid.Row="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            DockPanel.Dock="Bottom"
             Orientation="Horizontal">
-            <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=OKCommand}">
+            <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=OKCommand}" IsEnabled="{Binding CanOK}">
                 <Image
                     Width="48"
                     RenderOptions.BitmapScalingMode="HighQuality"
@@ -89,9 +118,14 @@
                     Source="{StaticResource CancelImage}" />
             </Button>
         </StackPanel>
-        <Grid Margin="10">
+        
+        <Grid
+            Grid.Row="1"
+            Grid.Column="2"
+            MinWidth="200">
             <ListBox
                 x:Name="foldLB"
+                BorderThickness="0"
                 ItemsSource="{Binding SelectedTreeFolder.SubFolders}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectionMode="Extended">
@@ -132,5 +166,6 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </Grid>
-    </DockPanel>
+        
+    </Grid>
 </controls:CustomWindow>
