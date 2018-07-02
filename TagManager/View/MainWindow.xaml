@@ -110,6 +110,9 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding UnselectAllCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:CustomWindow}}}" Gesture="ESC" />
+    </Window.InputBindings>
     <controls:CustomWindow.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button1">
             <BeginStoryboard HandoffBehavior="Compose" Storyboard="{StaticResource DataToImageAnimation}" />
@@ -270,34 +273,71 @@
                     </TransformGroup>
                 </DockPanel.RenderTransform>
 
-                <GroupBox DockPanel.Dock="Right" Header="Тэги">
-                    <StackPanel VerticalAlignment="Center" DataContext="{Binding TempTrack}">
+                <GroupBox
+                    MinWidth="260"
+                    DockPanel.Dock="Right"
+                    Header="Тэги"
+                    Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid>
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            DataContext="{Binding TempTrack}"
+                            Visibility="{Binding Main.HasSelected, Source={StaticResource Locator}, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel.Resources>
 
-                        <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="FontSize" Value="15" />
+                                    <Setter Property="Margin" Value="5" />
+                                </Style>
 
-                            <Style TargetType="TextBlock">
-                                <Setter Property="FontSize" Value="15" />
-                                <Setter Property="Margin" Value="5" />
-                            </Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="FontSize" Value="15" />
+                                    <Setter Property="Margin" Value="5" />
+                                </Style>
 
-                            <Style TargetType="TextBox">
-                                <Setter Property="FontSize" Value="15" />
-                                <Setter Property="Margin" Value="5" />
-                            </Style>
+                            </StackPanel.Resources>
 
-                        </StackPanel.Resources>
+                            <TextBlock Text="Исполнитель" />
+                            <TextBox Text="{Binding Artist}" />
+                            <TextBlock Text="Название" />
+                            <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Год" />
+                            <TextBox Text="{Binding Year}" />
 
-                        <TextBlock Text="Исполнитель" />
-                        <TextBox Text="{Binding Artist}" />
-                        <TextBlock Text="Название" />
-                        <TextBox Text="{Binding Title}" />
-                        <TextBlock Text="Год" />
-                        <TextBox Text="{Binding Year}" />
+                            <TextBlock Text="ISRC" />
+                            <DockPanel LastChildFill="True">
+                                <Button Width="20" Command="{Binding Main.ISRCSearchCommand, Source={StaticResource Locator}}">
+                                    <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{StaticResource SearchImage}" />
+                                </Button>
+                                <controls:MaskedTextBox
+                                    HorizontalAlignment="Center"
+                                    InputMask="LL-LLA-00-00000"
+                                    Text="{Binding ISRC}">
+                                    <controls:MaskedTextBox.InputBindings>
+                                        <KeyBinding Command="{Binding Main.InsertISRCCommand, Source={StaticResource Locator}}" Gesture="CTRL+V" />
+                                    </controls:MaskedTextBox.InputBindings>
+                                </controls:MaskedTextBox>
+                            </DockPanel>
 
-                    </StackPanel>
+
+                        </StackPanel>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="15"
+                            Foreground="LightGray"
+                            Text="Шаг 2. Выберите трек"
+                            TextAlignment="Center"
+                            Visibility="{Binding HasSelected, Converter={StaticResource AntiBoolToVisibilityConverter}}" />
+                    </Grid>
                 </GroupBox>
 
-                <GroupBox DockPanel.Dock="Top">
+                <Border
+                    Margin="0,8,0,0"
+                    BorderBrush="#FFD5DFE5"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    DockPanel.Dock="Top">
                     <StackPanel Orientation="Horizontal">
                         <Button Command="{Binding OpenDialogCommand}">
                             <Image
@@ -306,40 +346,70 @@
                                 Source="{StaticResource OpenImage}" />
                         </Button>
                     </StackPanel>
-                </GroupBox>
+                </Border>
 
                 <GroupBox Header="Треки">
-                    <ListView
-                        BorderThickness="0"
-                        ItemsSource="{Binding Source={StaticResource ItemsSource}}"
-                        SelectionMode="Extended">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}, Path=SelectedItems}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ListView.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock
-                                            FontSize="14"
-                                            FontWeight="Bold"
-                                            Text="{Binding Name}" />
-                                    </DataTemplate>
-                                </GroupStyle.HeaderTemplate>
-                            </GroupStyle>
-                        </ListView.GroupStyle>
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Artist}" Header="Artist" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" />
-                                <GridViewColumn DisplayMemberBinding="{Binding Year}" Header="Year" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <Grid>
+                        <ListView
+                            x:Name="ListView"
+                            BorderThickness="0"
+                            ItemsSource="{Binding Source={StaticResource ItemsSource}}"
+                            SelectionMode="Extended"
+                            Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}, Path=SelectedItems}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListView.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                FontSize="14"
+                                                FontWeight="Bold"
+                                                Text="{Binding Name}" />
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ListView.GroupStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Artist}" Header="Artist" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Title}" Header="Title" />
+                                    <GridViewColumn DisplayMemberBinding="{Binding Year}" Header="Year" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <StackPanel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding HasItems, Converter={StaticResource AntiBoolToVisibilityConverter}}">
+                            <Button
+                                Width="200"
+                                Height="200"
+                                Margin="5"
+                                HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding OpenDialogCommand}">
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    FontSize="150"
+                                    Foreground="LightGray"
+                                    Text="+"
+                                    TextAlignment="Center" />
+                            </Button>
+                            <TextBlock
+                                Margin="6"
+                                FontSize="25"
+                                Foreground="LightGray"
+                                Text="Шаг 1. Выберите папку" />
+                        </StackPanel>
+                    </Grid>
                 </GroupBox>
             </DockPanel>
             <Image

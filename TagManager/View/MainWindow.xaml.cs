@@ -17,13 +17,22 @@ namespace TagManager.View
 	/// </summary>
 	public partial class MainWindow : CustomWindow
 	{
+	    private RelayCommand _unselelectAllCommand;
+
+        public RelayCommand UnselectAllCommand
+        {
+            get { return _unselelectAllCommand ?? (_unselelectAllCommand = new RelayCommand(() =>
+            {
+                ListView.UnselectAll();
+            })); }
+        }
 
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			Closing += (s, e) => ViewModelLocator.Cleanup();
-			
 		}
+
     }
 }

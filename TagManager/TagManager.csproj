@@ -82,6 +82,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\CustomWindow.cs" />
+    <Compile Include="Controls\MaskedTextBox.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\DoubleToMarginConverter.cs" />
     <Compile Include="ViewModel\FolderViewModel.cs" />
@@ -188,6 +189,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

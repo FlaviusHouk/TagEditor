@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using TagManager.View;
 using ViewModel;
+using WebRequests;
 
 namespace TagManager.ViewModel
 {
@@ -15,7 +17,7 @@ namespace TagManager.ViewModel
     {
         #region Fields
         private bool _isPlayerMode = true;
-
+        private const int ISRCCount = 12;
         #endregion
 
         #region Properties
@@ -24,7 +26,7 @@ namespace TagManager.ViewModel
 
         public ObservableCollection<TrackViewModel> Fols { get; private set; } = new ObservableCollection<TrackViewModel>();
 
-        public List<TrackViewModel> SelectedItems { get; set; }
+        public List<TrackViewModel> SelectedItems { get; set; } = new List<TrackViewModel>();
 
         public TrackViewModel TempTrack
         {
@@ -47,6 +49,16 @@ namespace TagManager.ViewModel
                 RaisePropertyChanged(nameof(IsPlayerMode));
             }
         }
+
+        public bool HasItems
+        {
+            get { return Fols.Any(); }
+        }
+
+        public bool HasSelected
+        {
+            get { return SelectedItems.Any(); }
+        }
         #endregion
 
         #region Commands
@@ -55,7 +67,8 @@ namespace TagManager.ViewModel
         private RelayCommand _openDialogCommand;
         private RelayCommand<object> _selectionChangedCommand;
         private RelayCommand<bool> _changeModeCommand;
-
+        private RelayCommand _isrcSearchCommand;
+        private RelayCommand _insertISRCCommand;
 
         public RelayCommand NextTrackCommand
         {
@@ -100,6 +113,7 @@ namespace TagManager.ViewModel
                   {
                       SelectedItems = ((items as IEnumerable<object>) ?? throw new InvalidOperationException()).Cast<TrackViewModel>().ToList();
                       RaisePropertyChanged(nameof(TempTrack));
+                      RaisePropertyChanged(nameof(HasSelected));
                   }));
             }
         }
@@ -114,6 +128,59 @@ namespace TagManager.ViewModel
                   }));
             }
         }
+
+        public RelayCommand InsertISRCCommand
+        { get
+            {
+                return _insertISRCCommand ?? (_isrcSearchCommand = new RelayCommand((() =>
+                           {
+                               TempTrack.ISRC = Clipboard.GetText();
+                           })));
+            }
+        }
+
+        public RelayCommand ISRCSearchCommand
+        {
+            get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(() =>
+            {
+                ISRCRequestManager rm = ISRCRequestManager.Inst;
+                DisplayDoc result = null;
+                var re = new Regex("#.*?;");
+                var isrc = re.Replace(TempTrack.ISRC, ";");
+                if (isrc.Length == ISRCCount)
+                {
+                    result = rm.GetFromISRC(isrc).DisplayDocs.FirstOrDefault();
+                    
+                    TempTrack.Artist = string.IsNullOrEmpty(result.ArtistName) ? TempTrack.Artist : result.ArtistName;
+                    TempTrack.Title = string.IsNullOrEmpty(result.TrackTitle) ? TempTrack.Title : result.TrackTitle;
+                    TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : Int32.Parse(result.RecordingYear);
+                }
+                else if(!string.IsNullOrEmpty(TempTrack.Artist) && !String.IsNullOrEmpty(TempTrack.Title))
+                {
+                    var response = rm.GetFromData(TempTrack.Artist, TempTrack.Title).DisplayDocs;
+                    var req = response.Where(x => string.CompareOrdinal(x.ArtistName, TempTrack.Artist) == 0 && string.CompareOrdinal(x.TrackTitle, TempTrack.Title) == 0).ToArray();
+                    if (req.Any())
+                    {
+                        if (req.Length > 1 && string.IsNullOrEmpty(TempTrack.Year.ToString()))
+                        {
+                            result = req.FirstOrDefault();
+                        }
+                        else
+                        {
+                            result = req.FirstOrDefault();
+                        }
+
+                        TempTrack.ISRC = result.IsrcCode;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Записей не найдено");
+                        return;
+                    }
+                }
+            }));}
+        }
+
         #endregion
 
 
@@ -124,5 +191,14 @@ namespace TagManager.ViewModel
             return temp;
         }
 
+        public MainViewModel()
+        {
+            Fols.CollectionChanged += Fols_CollectionChanged;
+        }
+
+        private void Fols_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(HasItems));
+        }
     }
 }
