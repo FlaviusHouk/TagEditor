@@ -17,19 +17,19 @@
     WindowStyle="None"
     mc:Ignorable="d">
     <Grid>
-        
+
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="10*" />
             <RowDefinition Height="1.5*" />
         </Grid.RowDefinitions>
-        
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15*" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="30*" />
         </Grid.ColumnDefinitions>
-        
+
         <Grid.Resources>
             <Style TargetType="Button">
                 <Setter Property="Background" Value="Transparent" />
@@ -39,7 +39,7 @@
                 <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
             </Style>
         </Grid.Resources>
-        
+
         <DockPanel
             Grid.Row="0"
             Grid.ColumnSpan="3"
@@ -63,7 +63,7 @@
             Grid.Row="1"
             Grid.RowSpan="2"
             MinWidth="200">
-            <TreeView ItemsSource="{Binding Folders}" BorderThickness="0">
+            <TreeView BorderThickness="0" ItemsSource="{Binding Folders}">
                 <TreeView.Resources>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
@@ -97,7 +97,7 @@
                 </TreeView.ItemTemplate>
             </TreeView>
         </Grid>
-        
+
         <StackPanel
             Grid.Row="2"
             Grid.Column="1"
@@ -118,17 +118,25 @@
                     Source="{StaticResource CancelImage}" />
             </Button>
         </StackPanel>
-        
+
         <Grid
             Grid.Row="1"
             Grid.Column="2"
             MinWidth="200">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="20"
+                Foreground="LightGray"
+                Text="Выберите папку"
+                TextAlignment="Center" />
             <ListBox
                 x:Name="foldLB"
                 BorderThickness="0"
                 ItemsSource="{Binding SelectedTreeFolder.SubFolders}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                SelectionMode="Extended">
+                SelectionMode="Extended"
+                Visibility="{Binding HasItem, Converter={StaticResource BoolToVisibilityConverter}}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding SelectionListChangedCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}, Path=SelectedItems}" />
@@ -166,6 +174,6 @@
                 </ListBox.ItemsPanel>
             </ListBox>
         </Grid>
-        
+
     </Grid>
 </controls:CustomWindow>

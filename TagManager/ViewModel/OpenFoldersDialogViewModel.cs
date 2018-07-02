@@ -43,6 +43,7 @@ namespace ViewModel
                 return _selectionTreeChangedCommand ?? (_selectionTreeChangedCommand = new RelayCommand<object>((item) =>
                 {
                     SelectedTreeFolder = item as FolderViewModel;
+                    RaisePropertyChanged(nameof(HasItem));
                 }));
             }
         }
@@ -50,6 +51,11 @@ namespace ViewModel
         public bool CanOK
         {
             get { return SelectedListFolders.Any(); }
+        }
+
+        public bool HasItem
+        {
+            get { return SelectedTreeFolder !=null && Directory.GetDirectories(SelectedTreeFolder.Path).Any(); }
         }
 
         public void SelectInListBox(FolderViewModel folderViewModel)
