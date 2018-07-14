@@ -109,9 +109,14 @@ namespace TagManager.ViewModel
         {
             get
             {
-                return _selectionChangedCommand ?? (_selectionChangedCommand = new RelayCommand<object>((items) =>
+                return _selectionChangedCommand ?? (_selectionChangedCommand = new RelayCommand<object>(items =>
                   {
-                      SelectedItems = ((items as IEnumerable<object>) ?? throw new InvalidOperationException()).Cast<TrackViewModel>().ToList();
+                      IEnumerable<object> set = items as IEnumerable<object>;
+
+                      if (set == null)
+                          throw new InvalidOperationException();
+
+                      SelectedItems = set.Cast<TrackViewModel>().ToList();
                       RaisePropertyChanged(nameof(TempTrack));
                       RaisePropertyChanged(nameof(HasSelected));
                   }));
