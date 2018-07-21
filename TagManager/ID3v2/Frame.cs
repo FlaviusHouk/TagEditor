@@ -25,6 +25,10 @@ namespace ID3v2
             {
                 return _data;
             }
+            set
+            {
+                _data = value;
+            }
         }
 
         public Frame(FrameHeader header, byte[] data)

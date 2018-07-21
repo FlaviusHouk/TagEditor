@@ -11,10 +11,40 @@ namespace ID3v2
     {
         private TagHeader _header;
         private List<Frame> _frames;
+        private string _filePath;
 
         public Tag(string path)
         {
-            FileStream file = File.OpenRead(path);
+            _filePath = path;
+            using (FileStream file = File.OpenRead(path))
+            {
+                _frames = new List<Frame>();
+
+                byte[] header = new byte[10];
+                file.Read(header, 0, 10);
+                _header = new TagHeader(header);
+
+                int pos = 10;
+                while (pos < _header.Size)
+                {
+                    file.Read(header, 0, 10);
+                    pos += 10;
+                    FrameHeader head = new FrameHeader(header);
+                    if (head.Title.All(c => char.IsLetterOrDigit(c)))
+                    {
+                        byte[] data = new byte[head.Size];
+                        file.Read(data, 0, head.Size);
+                        Frame frame = new Frame(head, data);
+                        _frames.Add(frame);
+                    }
+
+                    pos += head.Size;
+                }
+            }
+        }
+
+        public Tag(Stream file)
+        {
             _frames = new List<Frame>();
 
             byte[] header = new byte[10];
@@ -39,18 +69,20 @@ namespace ID3v2
             }
         }
 
-        public Tag(Stream file)
-        {
-
-        }
-
         #region DataProperties
 
         public string Album
         {
             get
             {
-                return GetFrameDataAsString("TALB").Trim('\0');
+                return GetTextData("TALB").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TALB", value);
             }
         }
 
@@ -58,7 +90,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TBPM").Trim('\0');
+                return GetTextData("TBPM").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TBPM", value);
             }
         }
 
@@ -66,7 +105,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCOM").Trim('\0');
+                return GetTextData("TCOM").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TCOM", value);
             }
         }
 
@@ -74,7 +120,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCON").Trim('\0');
+                return GetTextData("TCON").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TCON", value);
             }
         }
 
@@ -82,7 +135,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TCOP").Trim('\0');
+                return GetTextData("TCOP").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TCOP", value);
             }
         }
 
@@ -90,7 +150,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TDAT").Trim('\0');
+                return GetTextData("TDAT").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TDAT", value);
             }
         }
 
@@ -98,7 +165,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TDLY").Trim('\0');
+                return GetTextData("TDLY").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TDLY", value);
             }
         }
 
@@ -106,7 +180,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TENC").Trim('\0');
+                return GetTextData("TENC").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TENC", value);
             }
         }
 
@@ -114,7 +195,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TEXT").Trim('\0');
+                return GetTextData("TEXT").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TEXT", value);
             }
         }
 
@@ -122,7 +210,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TFLT").Trim('\0');
+                return GetTextData("TFLT").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TFLT", value);
             }
         }
 
@@ -130,7 +225,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIME").Trim('\0');
+                return GetTextData("TIME").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TIME", value);
             }
         }
 
@@ -138,7 +240,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT1").Trim('\0');
+                return GetTextData("TIT1").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TIT1", value);
             }
         }
 
@@ -146,7 +255,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT2").Trim('\0');
+                return GetTextData("TIT2").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TIT2", value);
             }
         }
 
@@ -154,7 +270,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TIT3").Trim('\0');
+                return GetTextData("TIT3").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TIT3", value);
             }
         }
 
@@ -162,7 +285,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TKEY").Trim('\0');
+                return GetTextData("TKEY").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TKEY", value);
             }
         }
 
@@ -170,7 +300,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TLAN").Trim('\0');
+                return GetTextData("TLAN").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TLAN", value);
             }
         }
 
@@ -181,7 +318,7 @@ namespace ID3v2
         {
             get
             {
-                string retVal = GetFrameDataAsString("TLEN").Trim('\0');
+                string retVal = GetTextData("TLEN").Trim('\0');
                 int toRet;
 
                 return int.TryParse(retVal, out toRet) ? toRet : 0;
@@ -192,7 +329,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TMED").Trim('\0');
+                return GetTextData("TMED").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TMED", value);
             }
         }
 
@@ -200,7 +344,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOAL").Trim('\0');
+                return GetTextData("TOAL").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TOAL", value);
             }
         }
 
@@ -208,7 +359,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOFN").Trim('\0');
+                return GetTextData("TOFN").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TOFN", value);
             }
         }
 
@@ -216,7 +374,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOLY").Trim('\0');
+                return GetTextData("TOLY").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TOLY", value);
             }
         }
 
@@ -224,7 +389,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOPE").Trim('\0');
+                return GetTextData("TOPE").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TOPE", value);
             }
         }
 
@@ -232,7 +404,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TORY").Trim('\0');
+                return GetTextData("TORY").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TORY", value);
             }
         }
 
@@ -240,7 +419,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TOWN").Trim('\0');
+                return GetTextData("TOWN").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TOWN", value);
             }
         }
 
@@ -248,7 +434,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE1").Trim('\0');
+                return GetTextData("TPE1").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPE1", value);
             }
         }
 
@@ -256,7 +449,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE2").Trim('\0');
+                return GetTextData("TPE2").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPE2", value);
             }
         }
 
@@ -264,7 +464,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE3").Trim('\0');
+                return GetTextData("TPE3").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPE3", value);
             }
         }
 
@@ -272,7 +479,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPE4").Trim('\0');
+                return GetTextData("TPE4").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPE4", value);
             }
         }
 
@@ -280,7 +494,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPOS").Trim('\0');
+                return GetTextData("TPOS").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPOS", value);
             }
         }
 
@@ -288,7 +509,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TPUB").Trim('\0');
+                return GetTextData("TPUB").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TPUB", value);
             }
         }
 
@@ -296,7 +524,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRCK").Trim('\0');
+                return GetTextData("TRCK").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TRCK", value);
             }
         }
 
@@ -304,7 +539,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRDA").Trim('\0');
+                return GetTextData("TRDA").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TRDA", value);
             }
         }
 
@@ -312,7 +554,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRSN").Trim('\0');
+                return GetTextData("TRSN").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TRSN", value);
             }
         }
 
@@ -320,7 +569,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TRSO").Trim('\0');
+                return GetTextData("TRSO").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TRSO", value);
             }
         }
 
@@ -328,7 +584,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TSIZ").Trim('\0');
+                return GetTextData("TSIZ").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TSIZ", value);
             }
         }
 
@@ -336,7 +599,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TSRC").Trim('\0');
+                return GetTextData("TSRC").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TSRC", value);
             }
         }
 
@@ -344,7 +614,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TSSE").Trim('\0');
+                return GetTextData("TSSE").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TSSE", value);
             }
         }
 
@@ -352,7 +629,14 @@ namespace ID3v2
         {
             get
             {
-                return GetFrameDataAsString("TYER").Trim('\0');
+                return GetTextData("TYER").Trim('\0');
+            }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    return;
+
+                SetTextData("TYER", value);
             }
         }
 
@@ -380,11 +664,63 @@ namespace ID3v2
         }
         #endregion
 
-        private string GetFrameDataAsString(string name)
+        private string GetTextData(string name)
         {
             Frame cur = _frames.FirstOrDefault(f => string.Compare(f.Header.Title, name, StringComparison.OrdinalIgnoreCase) == 0);
 
             return cur == null ? string.Empty : EncodeHelper.EncodeByteArray(cur.Data);
+        }
+
+        private void SetTextData(string frameName, string data)
+        {
+            Frame cur = _frames.FirstOrDefault(f => string.Compare(f.Header.Title, frameName, StringComparison.OrdinalIgnoreCase) == 0);
+
+            if (cur == null)
+            {
+                FrameHeader newHeader = new FrameHeader(frameName, 0, new byte[2]);
+                Frame toAdd = new Frame(newHeader, new byte[]{ 1, 255, 255 });
+                _frames.Add(toAdd);
+
+                cur = toAdd;
+            }
+
+            byte[] encoded = EncodeHelper.DecodeString(data, cur.Data.Take(3).ToArray());
+
+            cur.Header.Size = encoded.Length;
+            cur.Data = encoded;
+        }
+
+        public void SaveTag()
+        {
+            using (FileStream file = File.Open(_filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None))
+            {
+                file.Position = _header.Size;
+
+                byte[] mp3Data = new byte[file.Length - _header.Size];
+
+                file.Read(mp3Data, 0, mp3Data.Length);
+
+                long delta = _frames.Select(f => f.Header.Size - f.Header.IniialSize).Sum();
+
+                byte[] newFile = new byte[_header.Size + delta + 10 + mp3Data.Length];
+
+                using (MemoryStream mem = new MemoryStream(newFile))
+                {
+                    mem.Write(_header.GetRawRepresentation(), 0, 10);
+
+                    foreach(Frame f in _frames)
+                    {
+                        mem.Write(f.Header.GetRawRepresentation(), 0, 10);
+                        mem.Write(f.Data, 0, f.Data.Length);
+                    }
+
+                    mem.Write(mp3Data, 0, mp3Data.Length);
+                }
+
+                file.SetLength(newFile.Length);
+
+                file.Write(newFile, 0, newFile.Length);
+            }
         }
     }
 }
