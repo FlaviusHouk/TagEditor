@@ -69,6 +69,7 @@ namespace TagManager.ViewModel
         private RelayCommand<bool> _changeModeCommand;
         private RelayCommand _isrcSearchCommand;
         private RelayCommand _insertISRCCommand;
+        private RelayCommand _saveTags;
 
         public RelayCommand NextTrackCommand
         {
@@ -135,7 +136,8 @@ namespace TagManager.ViewModel
         }
 
         public RelayCommand InsertISRCCommand
-        { get
+        {
+            get
             {
                 return _insertISRCCommand ?? (_isrcSearchCommand = new RelayCommand((() =>
                            {
@@ -158,7 +160,7 @@ namespace TagManager.ViewModel
                     
                     TempTrack.Artist = string.IsNullOrEmpty(result.ArtistName) ? TempTrack.Artist : result.ArtistName;
                     TempTrack.Title = string.IsNullOrEmpty(result.TrackTitle) ? TempTrack.Title : result.TrackTitle;
-                    TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : Int32.Parse(result.RecordingYear);
+                    TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : result.RecordingYear;
                 }
                 else if(!string.IsNullOrEmpty(TempTrack.Artist) && !String.IsNullOrEmpty(TempTrack.Title))
                 {
@@ -184,6 +186,19 @@ namespace TagManager.ViewModel
                     }
                 }
             }));}
+        }
+
+        public RelayCommand SaveTags
+        {
+            get
+            { return _saveTags ?? (_saveTags = new RelayCommand(() =>
+                {
+                    if (SelectedItems.Count == 1)
+                    {
+                        TempTrack.SaveTag();
+                    }
+                }));
+            }
         }
 
         #endregion

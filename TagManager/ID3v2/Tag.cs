@@ -645,21 +645,25 @@ namespace ID3v2
             get
             {
                 byte[] data = _frames.FirstOrDefault(f => string.Compare(f.Header.Title, "APIC", StringComparison.OrdinalIgnoreCase) == 0)?.Data;
-
-                int i = 1;
-                for (int j = 0; j < 2; j++)
+                if (data != null)
                 {
-                    for (; i < data.Length; i++)
+                    int i = 1;
+                    for (int j = 0; j < 2; j++)
                     {
-                        if (data[i] == 0)
-                            break;
+                        for (; i < data.Length; i++)
+                        {
+                            if (data[i] == 0)
+                                break;
+                        }
+
+                        i++;
                     }
-                    i++;
+
+                    string type = EncodeHelper.EncodeByteArray(data.Take(i).ToArray());
+
+                    return data.Skip(i).ToArray();
                 }
-
-                string type = EncodeHelper.EncodeByteArray(data.Take(i).ToArray());
-
-                return data.Skip(i).ToArray();
+                return  new byte[2];
             }
         }
         #endregion

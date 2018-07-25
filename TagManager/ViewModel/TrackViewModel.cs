@@ -33,7 +33,7 @@ namespace TagManager.ViewModel
         private string _mediaSize;
         private string _ISRC;
         private string _subTitle;
-        private int _year;
+        private string _year;
 
         private byte[] _image;
         #endregion
@@ -261,7 +261,7 @@ namespace TagManager.ViewModel
             }
         }
 
-        public int Year
+        public string Year
         {
             get { return _year; }
             set
@@ -330,8 +330,18 @@ namespace TagManager.ViewModel
             _fullDate = trackTag.FullDate;
             _mediaSize = trackTag.MediaSize;
             _ISRC = trackTag.ISRC;
-            _year = Convert.ToInt32(trackTag.Year == "" ? 0.ToString() : trackTag.Year);
+            _year = trackTag.Year;
             _image = trackTag.Image;
+        }
+
+        public void SaveTag()
+        {
+            _trackTag.Title = _title;
+            _trackTag.Artist = _artist;
+            _trackTag.Year = _year;
+            _trackTag.ISRC = _ISRC;
+            _trackTag.Album = _album;
+            _trackTag.SaveTag();
         }
     }
 }

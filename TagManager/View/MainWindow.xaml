@@ -317,6 +317,12 @@
                                         <KeyBinding Command="{Binding Main.InsertISRCCommand, Source={StaticResource Locator}}" Gesture="CTRL+V" />
                                     </controls:MaskedTextBox.InputBindings>
                                 </controls:MaskedTextBox>
+
+                                <Button
+                                    Margin="0,4,0,0"
+                                    Command="{Binding Main.SaveTags, Source={StaticResource Locator}}"
+                                    Content="Save It" />
+
                             </DockPanel>
 
 

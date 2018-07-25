@@ -53,7 +53,7 @@ namespace ID3v2
                     }
                 case 1:
                     {
-                        enc = data[3] == 254 ? Encoding.BigEndianUnicode : Encoding.Unicode;
+                        enc = data[2] == 254 ? Encoding.BigEndianUnicode : Encoding.Unicode;
                         break;
                     }
                 case 2:

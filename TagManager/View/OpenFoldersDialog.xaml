@@ -128,7 +128,7 @@
                 VerticalAlignment="Center"
                 FontSize="20"
                 Foreground="LightGray"
-                Text="Выберите папку"
+                Text="{Binding ListPlaceText}"
                 TextAlignment="Center" />
             <ListBox
                 x:Name="foldLB"

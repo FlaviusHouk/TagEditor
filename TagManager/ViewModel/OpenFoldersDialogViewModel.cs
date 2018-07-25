@@ -44,13 +44,15 @@ namespace ViewModel
                 {
                     SelectedTreeFolder = item as FolderViewModel;
                     RaisePropertyChanged(nameof(HasItem));
+                    RaisePropertyChanged(nameof(ListPlaceText));
+                    RaisePropertyChanged(nameof(CanOK));
                 }));
             }
         }
 
         public bool CanOK
         {
-            get { return SelectedListFolders.Any(); }
+            get { return SelectedListFolders.Any() || SelectedTreeFolder !=null; }
         }
 
         public bool HasItem
@@ -97,13 +99,36 @@ namespace ViewModel
             }
         }
 
+        public bool HasFolderTracks
+        {
+            get { return CanOK && Directory.GetFiles(SelectedTreeFolder.Path).Where(o => o.Split('.').LastOrDefault() == "mp3").Any(); }
+        }
+
+        public string ListPlaceText
+        {
+            get
+            {
+                if (SelectedTreeFolder != null && HasFolderTracks)
+                {
+                    return $"В папке {Directory.GetFiles(SelectedTreeFolder.Path).Where(o => o.Split('.').LastOrDefault() == "mp3").Count()} трек(-а)";
+                }
+
+                else if (SelectedTreeFolder!=null && !HasItem)
+                {
+                    return "Папка пуста";
+                }
+                
+                return "Выберите папку";
+            }
+        }
+
         public OpenFoldersDialogViewModel()
         {
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.Favorites)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)));
-            Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)));
+            Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
 
             var drives = Environment.GetLogicalDrives();
 
@@ -125,7 +150,16 @@ namespace ViewModel
 
         public string[] GetSelectedFolders()
         {
-            return SelectedListFolders.Select(o => o.Path).ToArray();
+            if (SelectedListFolders.Any())
+            {
+                return SelectedListFolders.Select(o => o.Path).ToArray();
+            }
+            else if (SelectedTreeFolder !=null)
+            {
+                return new []{ SelectedTreeFolder.Path};
+            }
+
+            return null;
         }
     }
 }
