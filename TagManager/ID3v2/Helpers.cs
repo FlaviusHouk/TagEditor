@@ -53,7 +53,7 @@ namespace ID3v2
                     }
                 case 1:
                     {
-                        enc = data[2] == 254 ? Encoding.BigEndianUnicode : Encoding.Unicode;
+                        enc = data[2] == 254 ? Encoding.Unicode : Encoding.BigEndianUnicode;
                         break;
                     }
                 case 2:
@@ -87,9 +87,9 @@ namespace ID3v2
             GetEncoding(old, out enc);
 
             int encMark = (old[0] == 1 ? 3 : 1);
-            int newSize = enc.GetByteCount(value) + encMark;
-            
-            byte[] data = enc.GetBytes(value);
+
+            byte[] data = Encoding.Convert(Encoding.Unicode, enc, Encoding.Unicode.GetBytes(value));
+            int newSize = data.Length + encMark;
 
             byte[] toRet = new byte[newSize];
 
