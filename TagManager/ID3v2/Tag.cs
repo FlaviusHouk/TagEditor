@@ -723,6 +723,8 @@ namespace ID3v2
 
                 file.SetLength(newFile.Length);
 
+                file.Seek(0, SeekOrigin.Begin);
+
                 file.Write(newFile, 0, newFile.Length);
             }
         }
