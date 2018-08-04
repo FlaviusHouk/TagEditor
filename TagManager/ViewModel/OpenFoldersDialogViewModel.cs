@@ -130,11 +130,11 @@ namespace ViewModel
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)));
 
-            var drives = Environment.GetLogicalDrives();
+            DriveInfo[] drives = DriveInfo.GetDrives();
 
-            foreach (var item in drives)
+            foreach (var item in drives.Where(drive=>drive.IsReady))
             {
-                Folders.Add(new FolderViewModel(item));
+                Folders.Add(new FolderViewModel(item.Name));
             }
         }
 

@@ -32,7 +32,7 @@ namespace ID3v2
                 arr[i] = (byte)(part & check);
             }
 
-            return arr;
+            return arr.Reverse().ToArray();
         }
     }
 
