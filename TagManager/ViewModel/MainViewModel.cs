@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using TagManager.View;
 using ViewModel;
@@ -18,6 +19,9 @@ namespace TagManager.ViewModel
         #region Fields
         private bool _isPlayerMode = true;
         private const int ISRCCount = 12;
+        private bool _isISRCSearching;
+
+        private Task _isrcSearchTask;
         #endregion
 
         #region Properties
@@ -27,6 +31,16 @@ namespace TagManager.ViewModel
         public ObservableCollection<TrackViewModel> Fols { get; private set; } = new ObservableCollection<TrackViewModel>();
 
         public List<TrackViewModel> SelectedItems { get; set; } = new List<TrackViewModel>();
+
+        public bool IsISRCSearching
+        {
+            get { return _isISRCSearching;}
+            set
+            {
+                _isISRCSearching = value;
+                RaisePropertyChanged(nameof(IsISRCSearching));
+            }
+        } 
 
         public TrackViewModel TempTrack
         {
@@ -148,44 +162,60 @@ namespace TagManager.ViewModel
 
         public RelayCommand ISRCSearchCommand
         {
-            get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(() =>
+            get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(() => { SearchISRCAsync(); }));}
+        }
+
+        private async void SearchISRCAsync()
+        {
+            if (_isrcSearchTask == null)
             {
-                ISRCRequestManager rm = ISRCRequestManager.Inst;
-                DisplayDoc result = null;
-                var re = new Regex("#.*?;");
-                var isrc = re.Replace(TempTrack.ISRC, ";");
-                if (isrc.Length == ISRCCount)
+                _isrcSearchTask = Task.Run(() =>
                 {
-                    result = rm.GetFromISRC(isrc).DisplayDocs.FirstOrDefault();
-                    
-                    TempTrack.Artist = string.IsNullOrEmpty(result.ArtistName) ? TempTrack.Artist : result.ArtistName;
-                    TempTrack.Title = string.IsNullOrEmpty(result.TrackTitle) ? TempTrack.Title : result.TrackTitle;
-                    TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : result.RecordingYear;
-                }
-                else if(!string.IsNullOrEmpty(TempTrack.Artist) && !String.IsNullOrEmpty(TempTrack.Title))
-                {
-                    var response = rm.GetFromData(TempTrack.Artist, TempTrack.Title).DisplayDocs;
-                    var req = response.Where(x => string.CompareOrdinal(x.ArtistName, TempTrack.Artist) == 0 && string.CompareOrdinal(x.TrackTitle, TempTrack.Title) == 0).ToArray();
-                    if (req.Any())
+                    IsISRCSearching = true;
+                    ISRCRequestManager rm = ISRCRequestManager.Inst;
+                    DisplayDoc result = null;
+                    var re = new Regex("#.*?;");
+                    var isrc = re.Replace(TempTrack.ISRC, ";");
+                    if (isrc.Length == ISRCCount)
                     {
-                        if (req.Length > 1 && string.IsNullOrEmpty(TempTrack.Year.ToString()))
+                        result = rm.GetFromISRC(isrc).DisplayDocs.FirstOrDefault();
+
+                        TempTrack.Artist = string.IsNullOrEmpty(result.ArtistName) ? TempTrack.Artist : result.ArtistName;
+                        TempTrack.Title = string.IsNullOrEmpty(result.TrackTitle) ? TempTrack.Title : result.TrackTitle;
+                        TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : result.RecordingYear;
+                    }
+                    else if (!string.IsNullOrEmpty(TempTrack.Artist) && !String.IsNullOrEmpty(TempTrack.Title))
+                    {
+                        var response = rm.GetFromData(TempTrack.Artist, TempTrack.Title).DisplayDocs;
+                        var req = response.Where(x =>
+                            string.CompareOrdinal(x.ArtistName, TempTrack.Artist) == 0 &&
+                            string.CompareOrdinal(x.TrackTitle, TempTrack.Title) == 0).ToArray();
+                        if (req.Any())
                         {
-                            result = req.FirstOrDefault();
+                            if (req.Length > 1 && string.IsNullOrEmpty(TempTrack.Year.ToString()))
+                            {
+                                result = req.FirstOrDefault();
+                            }
+                            else
+                            {
+                                result = req.FirstOrDefault();
+                            }
+
+                            TempTrack.ISRC = result.IsrcCode;
                         }
                         else
                         {
-                            result = req.FirstOrDefault();
+                            MessageBox.Show("Записей не найдено");
+                            return;
                         }
-
-                        TempTrack.ISRC = result.IsrcCode;
                     }
-                    else
-                    {
-                        MessageBox.Show("Записей не найдено");
-                        return;
-                    }
-                }
-            }));}
+                }).ContinueWith(o =>
+                {
+                    IsISRCSearching = false;
+                    _isrcSearchTask = null;
+                });
+                await _isrcSearchTask;
+            }
         }
 
         public RelayCommand SaveTags

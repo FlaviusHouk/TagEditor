@@ -81,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\CircularProgressBar.xaml.cs">
+      <DependentUpon>CircularProgressBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CustomWindow.cs" />
     <Compile Include="Converters\ArrayToImageConverter.cs" />
     <Compile Include="Controls\MaskedTextBox.cs" />
@@ -97,6 +100,10 @@
     <Compile Include="WebRequest\DisplayDoc.cs" />
     <Compile Include="WebRequest\ISRCRequestManager.cs" />
     <Compile Include="WebRequest\SearchResponse.cs" />
+    <Page Include="Controls\CircularProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
