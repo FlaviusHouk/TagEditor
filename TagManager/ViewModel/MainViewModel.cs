@@ -20,8 +20,7 @@ namespace TagManager.ViewModel
         private bool _isPlayerMode = true;
         private const int ISRCCount = 12;
         private bool _isISRCSearching;
-
-        private Task _isrcSearchTask;
+        private bool _isSaving;
         #endregion
 
         #region Properties
@@ -40,7 +39,17 @@ namespace TagManager.ViewModel
                 _isISRCSearching = value;
                 RaisePropertyChanged(nameof(IsISRCSearching));
             }
-        } 
+        }
+
+        public bool IsSaving
+        {
+            get { return _isSaving; }
+            set
+            {
+                _isSaving = value;
+                RaisePropertyChanged(nameof(IsSaving));
+            }
+        }
 
         public TrackViewModel TempTrack
         {
@@ -165,6 +174,25 @@ namespace TagManager.ViewModel
             get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(() => { SearchISRCAsync(); }));}
         }
 
+        public RelayCommand SaveTags
+        {
+            get
+            { return _saveTags ?? (_saveTags = new RelayCommand(() =>
+                {
+                    if (SelectedItems.Count == 1)
+                    {
+                        SaveAsync(new []{TempTrack});
+                    }
+                }));
+            }
+        }
+
+        #endregion
+
+        #region AsyncItems
+        private Task _isrcSearchTask;
+        private Task _saveTask;
+
         private async void SearchISRCAsync()
         {
             if (_isrcSearchTask == null)
@@ -218,21 +246,27 @@ namespace TagManager.ViewModel
             }
         }
 
-        public RelayCommand SaveTags
+        private async void SaveAsync(IEnumerable<TrackViewModel> tracks)
         {
-            get
-            { return _saveTags ?? (_saveTags = new RelayCommand(() =>
+            if (_saveTask == null)
+            {
+                IsSaving = true;
+                _saveTask = Task.Run(() =>
                 {
-                    if (SelectedItems.Count == 1)
+                    foreach (var item in tracks)
                     {
-                        TempTrack.SaveTag();
+                        item.SaveTag();
                     }
-                }));
+                }).ContinueWith(o =>
+                {
+                    _saveTask = null;
+                    IsSaving = false;
+                });
             }
+
+            await _saveTask;
         }
-
         #endregion
-
 
         private TrackViewModel GenerateTempTrack()
         {

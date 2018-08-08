@@ -145,10 +145,12 @@
                     <ColumnDefinition Width="200*" />
                     <ColumnDefinition Width="50*" />
                 </Grid.ColumnDefinitions>
+
                 <Image
                     x:Name="image1"
                     Grid.Column="0"
                     Source="{Binding Source}" />
+
                 <StackPanel
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
@@ -337,10 +339,20 @@
                                     </controls:MaskedTextBox.InputBindings>
                                 </controls:MaskedTextBox>
 
-                                <Button
-                                    Margin="0,4,0,0"
-                                    Command="{Binding Main.SaveTags, Source={StaticResource Locator}}"
-                                    Content="Save It" />
+                                <Grid>
+                                    <Button
+                                        Margin="0,4,0,0"
+                                        Command="{Binding Main.SaveTags, Source={StaticResource Locator}}"
+                                        Content="Save It"
+                                        Visibility="{Binding Main.IsSaving, Source={StaticResource Locator}, Converter={StaticResource AntiBoolToVisibilityConverter}}" />
+                                    <Viewbox
+                                        Width="20"
+                                        Height="20"
+                                        Margin="0,4,0,0"
+                                        Visibility="{Binding Main.IsSaving, Source={StaticResource Locator}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <controls:CircularProgressBar />
+                                    </Viewbox>
+                                </Grid>
 
                             </DockPanel>
 
