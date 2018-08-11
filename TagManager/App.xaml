@@ -18,6 +18,7 @@
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <conv:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
         <conv:ArrayToImageConverter x:Key="ArrayToImageConverter"/>
+        <conv:ColorPaleteCreator x:Key="ColorPaleteCreator"/>
 
         <BitmapImage x:Key="NextTrackImage" UriSource="Resources/nextTrack.png" />
         <BitmapImage x:Key="PrevTrackImage" UriSource="Resources/preTrack.png" />

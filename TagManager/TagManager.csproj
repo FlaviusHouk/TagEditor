@@ -85,6 +85,7 @@
     <Compile Include="Converters\ArrayToImageConverter.cs" />
     <Compile Include="Controls\MaskedTextBox.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\ColorPaleteCreator.cs" />
     <Compile Include="Converters\DoubleToMarginConverter.cs" />
     <Compile Include="ViewModel\FolderViewModel.cs" />
     <Compile Include="ViewModel\OpenFoldersDialogViewModel.cs" />
@@ -149,9 +150,7 @@
       <Name>ID3v2</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\nextTrack.png" />
     <Resource Include="Resources\play.png" />
