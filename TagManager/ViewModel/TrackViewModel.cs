@@ -36,9 +36,17 @@ namespace TagManager.ViewModel
         private string _year;
 
         private byte[] _image;
+        private string _path;
+
         #endregion
 
         #region Properties
+
+        public string Path
+        {
+            get { return _path;}
+            private set { _path = value; }
+        }
 
         public int ID
         {
@@ -292,6 +300,7 @@ namespace TagManager.ViewModel
 
         public TrackViewModel(string path, string folder, int id)
         {
+            _path = path;
             var parts = path.Split('\\');
             _name = parts.LastOrDefault();
 

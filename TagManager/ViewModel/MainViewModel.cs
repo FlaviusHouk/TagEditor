@@ -21,13 +21,16 @@ namespace TagManager.ViewModel
         private const int ISRCCount = 12;
         private bool _isISRCSearching;
         private bool _isSaving;
+        private int CounterForID = 1;
         #endregion
 
         #region Properties
 
         public string Source { get; set; } = @"C:/Users/danyil.hryhoriev/Desktop/cover.jpg";
 
-        public ObservableCollection<TrackViewModel> Fols { get; private set; } = new ObservableCollection<TrackViewModel>();
+        public List<string> OpenedFolders { get; private set; } = new List<string>();
+
+        public ObservableCollection<TrackViewModel> Tracks { get; private set; } = new ObservableCollection<TrackViewModel>();
 
         public List<TrackViewModel> SelectedItems { get; set; } = new List<TrackViewModel>();
 
@@ -75,7 +78,7 @@ namespace TagManager.ViewModel
 
         public bool HasItems
         {
-            get { return Fols.Any(); }
+            get { return Tracks.Any(); }
         }
 
         public bool HasSelected
@@ -115,16 +118,9 @@ namespace TagManager.ViewModel
                       var vm = new OpenFoldersDialogViewModel();
                       var view = new OpenFoldersDialog() { Owner = Application.Current.MainWindow, DataContext = vm };
                       if (view.ShowDialog() != true) return;
-                      int index = 1;
-                      var s = vm.GetSelectedFolders();
-                      foreach (var item in s)
-                      {
-                          var files = Directory.GetFiles(item);
-                          foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
-                          {
-                              Fols.Add(new TrackViewModel(file,item,index++));
-                          }
-                      }
+                      var selectedFolders = vm.GetSelectedFolders();
+                      OpenedFolders.AddRange(selectedFolders);
+                      InspectFolders(selectedFolders);
                   }));
             }
         }
@@ -268,6 +264,26 @@ namespace TagManager.ViewModel
         }
         #endregion
 
+        #region Methods
+
+
+        private void InspectFolders(IEnumerable<string> selectedFolders)
+        {
+            if (!selectedFolders?.Any() ?? false)
+                return;
+
+            foreach (var item in selectedFolders)
+            {
+                var files = Directory.GetFiles(item);
+                foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
+                {
+                    if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase)==0))
+                        return;
+                    Tracks.Add(new TrackViewModel(file, item, CounterForID++));
+                }
+            }
+        }
+
         private TrackViewModel GenerateTempTrack()
         {
             var temp = new TrackViewModel();
@@ -275,14 +291,17 @@ namespace TagManager.ViewModel
             return temp;
         }
 
-        public MainViewModel()
-        {
-            Fols.CollectionChanged += Fols_CollectionChanged;
-        }
-
         private void Fols_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(HasItems));
         }
+        #endregion
+        
+        public MainViewModel()
+        {
+            InspectFolders(Properties.Settings.Default.OpenedFolders.Cast<string>());
+            Tracks.CollectionChanged += Fols_CollectionChanged;
+        }
+
     }
 }

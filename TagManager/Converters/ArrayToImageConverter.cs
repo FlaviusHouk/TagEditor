@@ -16,7 +16,7 @@ namespace TagManager.Converters
         {
             byte[] data = value as byte[];
            
-            if (data == null || data.Length == 0)
+            if (data == null || data.Length == 0 || data.All(o => o == 0))
                 return null;
 
             var image = new BitmapImage();

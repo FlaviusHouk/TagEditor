@@ -18,7 +18,7 @@
     WindowStyle="None"
     mc:Ignorable="d ignore">
     <Window.Resources>
-        <CollectionViewSource x:Key="ItemsSource" Source="{Binding Fols}">
+        <CollectionViewSource x:Key="ItemsSource" Source="{Binding Tracks}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Holder" />
             </CollectionViewSource.GroupDescriptions>
@@ -32,9 +32,9 @@
             <Setter Property="Margin" Value="5" />
             <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
         </Style>
-        
+
         <Style TargetType="GroupBox">
-            <Setter Property="Margin" Value="3"></Setter>
+            <Setter Property="Margin" Value="3" />
         </Style>
 
         <Storyboard x:Key="ImageToDataAnimation">
