@@ -17,6 +17,7 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d ignore">
+    
     <Window.Resources>
         <CollectionViewSource x:Key="ItemsSource" Source="{Binding Tracks}">
             <CollectionViewSource.GroupDescriptions>
@@ -453,20 +454,22 @@
                     </Grid>
                 </GroupBox>
             </DockPanel>
-            <Image
-                x:Name="image"
-                Grid.Column="1"
-                RenderTransformOrigin="0.5,0.5"
-                Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}">
-                <Image.RenderTransform>
+
+            <Border x:Name="image" Grid.Column="1" RenderTransformOrigin="0.5, 0.5"
+                    Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                    Background="{Binding TempTrack.Image, Converter={StaticResource ColorPaleteCreator}}">
+                
+                <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
                         <SkewTransform />
                         <RotateTransform />
                         <TranslateTransform />
                     </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
+                </Border.RenderTransform>
+
+                <Image Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}"/>
+            </Border>
         </Grid>
     </DockPanel>
 </controls:CustomWindow>
