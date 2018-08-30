@@ -32,6 +32,10 @@
             <Setter Property="Margin" Value="5" />
             <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
         </Style>
+        
+        <Style TargetType="GroupBox">
+            <Setter Property="Margin" Value="3"></Setter>
+        </Style>
 
         <Storyboard x:Key="ImageToDataAnimation">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="image" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)">
@@ -196,7 +200,7 @@
                                 <Setter Property="Template" Value="{StaticResource ButtonWithoutHigh}" />
                                 <Style.Triggers>
                                     <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Foreground" Value="#1CA389" />
+                                        <Setter Property="Foreground" Value="{StaticResource MainBrush}" />
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -370,7 +374,7 @@
                 </GroupBox>
 
                 <Border
-                    Margin="0,8,0,0"
+                    Margin="3,11,3,3"
                     BorderBrush="#FFD5DFE5"
                     BorderThickness="1"
                     CornerRadius="4"

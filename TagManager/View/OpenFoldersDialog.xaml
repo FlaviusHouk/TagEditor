@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="15*" />
+            <ColumnDefinition Width="26*" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="30*" />
         </Grid.ColumnDefinitions>
@@ -56,14 +56,19 @@
             Grid.Row="1"
             Grid.Column="1"
             Width="5"
+            Margin="2"
             HorizontalAlignment="Center"
-            VerticalAlignment="Stretch" />
+            VerticalAlignment="Stretch"
+            Background="{StaticResource MainBrush}" />
 
         <Grid
             Grid.Row="1"
             Grid.RowSpan="2"
             MinWidth="200">
-            <TreeView BorderThickness="0" ItemsSource="{Binding Folders}">
+            <TreeView
+                MinWidth="230"
+                BorderThickness="0"
+                ItemsSource="{Binding Folders}">
                 <TreeView.Resources>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />

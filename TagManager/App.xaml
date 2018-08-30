@@ -17,7 +17,7 @@
         <conv:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <conv:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
-        <conv:ArrayToImageConverter x:Key="ArrayToImageConverter"/>
+        <conv:ArrayToImageConverter x:Key="ArrayToImageConverter" />
 
         <BitmapImage x:Key="NextTrackImage" UriSource="Resources/nextTrack.png" />
         <BitmapImage x:Key="PrevTrackImage" UriSource="Resources/preTrack.png" />
@@ -34,8 +34,10 @@
         <BitmapImage x:Key="MusicImage" UriSource="Resources/music.png" />
         <BitmapImage x:Key="SearchImage" UriSource="Resources/search.png" />
 
+        <SolidColorBrush x:Key="MainBrush" Color="#1CA389" />
+
         <ControlTemplate x:Key="CustomWindow" TargetType="Window">
-            <Border BorderBrush="#1CA389" BorderThickness="2">
+            <Border BorderBrush="{StaticResource MainBrush}" BorderThickness="2">
                 <Grid>
                     <Grid
                         Grid.Row="1"
@@ -45,7 +47,7 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <Grid x:Name="TOPGrid" Background="#1CA389">
+                        <Grid x:Name="TOPGrid" Background="{StaticResource MainBrush}">
                             <Grid.Resources>
 
                                 <Style TargetType="Button">

@@ -181,7 +181,7 @@ namespace TagManager.ViewModel
                 {
                     if (SelectedItems.Count == 1)
                     {
-                        SaveAsync(new []{TempTrack});
+                        SaveAsync(new[] { TempTrack });
                     }
                 }));
             }
