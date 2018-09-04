@@ -17,9 +17,10 @@
         <conv:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <conv:AntiBoolToVisibilityConverter x:Key="AntiBoolToVisibilityConverter" />
-        <conv:ArrayToImageConverter x:Key="ArrayToImageConverter"/>
-        <conv:ColorPaleteCreator x:Key="ColorPaleteCreator"/>
+        <conv:ArrayToImageConverter x:Key="ArrayToImageConverter" />
+        <conv:ColorPaleteCreator x:Key="ColorPaleteCreator" />
 
+        <BitmapImage x:Key="Cover" UriSource="Resources/cover.png" />
         <BitmapImage x:Key="NextTrackImage" UriSource="Resources/nextTrack.png" />
         <BitmapImage x:Key="PrevTrackImage" UriSource="Resources/preTrack.png" />
         <BitmapImage x:Key="StopImage" UriSource="Resources/stop.png" />

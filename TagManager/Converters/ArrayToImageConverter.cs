@@ -17,7 +17,7 @@ namespace TagManager.Converters
             byte[] data = value as byte[];
            
             if (data == null || data.Length == 0 || data.All(o => o == 0))
-                return null;
+                return App.Current.FindResource("Cover") as BitmapImage;
 
             var image = new BitmapImage();
             using (var mem = new MemoryStream(data))

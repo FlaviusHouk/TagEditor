@@ -17,7 +17,7 @@
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d ignore">
-    
+
     <Window.Resources>
         <CollectionViewSource x:Key="ItemsSource" Source="{Binding Tracks}">
             <CollectionViewSource.GroupDescriptions>
@@ -154,7 +154,10 @@
                 <Image
                     x:Name="image1"
                     Grid.Column="0"
-                    Source="{Binding Source}" />
+                    Width="96"
+                    Height="96"
+                    RenderOptions.BitmapScalingMode="HighQuality"
+                    Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}" />
 
                 <StackPanel
                     Grid.Column="1"
@@ -164,8 +167,8 @@
                     <TextBlock
                         FontFamily="Italic"
                         FontSize="20"
-                        Text="Some song" />
-                    <TextBlock Text="Some singer" />
+                        Text="{Binding TempTrack.Title}" />
+                    <TextBlock Text="{Binding TempTrack.Artist}" />
                 </StackPanel>
 
                 <StackPanel
@@ -308,6 +311,12 @@
                             <TextBox Text="{Binding Artist}" />
                             <TextBlock Text="Название" />
                             <TextBox Text="{Binding Title}" />
+                            <TextBlock Text="Альбом" />
+                            <TextBox Text="{Binding Album}" />
+                            <TextBlock Text="Жанр" />
+                            <TextBox Text="{Binding Genre}" />
+                            <TextBlock Text="Композитор" />
+                            <TextBox Text="{Binding Composer}" />
                             <TextBlock Text="Год" />
                             <TextBox Text="{Binding Year}" />
 
@@ -406,14 +415,24 @@
                             </i:Interaction.Triggers>
                             <ListView.GroupStyle>
                                 <GroupStyle>
-                                    <GroupStyle.HeaderTemplate>
-                                        <DataTemplate>
-                                            <TextBlock
-                                                FontSize="14"
-                                                FontWeight="Bold"
-                                                Text="{Binding Name}" />
-                                        </DataTemplate>
-                                    </GroupStyle.HeaderTemplate>
+                                    <GroupStyle.ContainerStyle>
+                                        <Style TargetType="{x:Type GroupItem}">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                        <Expander>
+                                                            <Expander.Header>
+                                                                <TextBlock Text="{Binding Name}" />
+                                                            </Expander.Header>
+                                                            <Expander.Content>
+                                                                <ItemsPresenter />
+                                                            </Expander.Content>
+                                                        </Expander>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </GroupStyle.ContainerStyle>
                                 </GroupStyle>
                             </ListView.GroupStyle>
                             <ListView.View>
@@ -455,10 +474,13 @@
                 </GroupBox>
             </DockPanel>
 
-            <Border x:Name="image" Grid.Column="1" RenderTransformOrigin="0.5, 0.5"
-                    Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
-                    Background="{Binding TempTrack.Image, Converter={StaticResource ColorPaleteCreator}}">
-                
+            <Border
+                x:Name="image"
+                Grid.Column="1"
+                Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualWidth}"
+                Background="{Binding TempTrack.Image, Converter={StaticResource ColorPaleteCreator}}"
+                RenderTransformOrigin="0.5, 0.5">
+
                 <Border.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform />
@@ -468,7 +490,7 @@
                     </TransformGroup>
                 </Border.RenderTransform>
 
-                <Image Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}"/>
+                <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding TempTrack.Image, Converter={StaticResource ArrayToImageConverter}}" />
             </Border>
         </Grid>
     </DockPanel>

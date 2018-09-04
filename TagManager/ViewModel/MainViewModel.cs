@@ -119,7 +119,6 @@ namespace TagManager.ViewModel
                       var view = new OpenFoldersDialog() { Owner = Application.Current.MainWindow, DataContext = vm };
                       if (view.ShowDialog() != true) return;
                       var selectedFolders = vm.GetSelectedFolders();
-                      OpenedFolders.AddRange(selectedFolders);
                       InspectFolders(selectedFolders);
                   }));
             }
@@ -272,14 +271,23 @@ namespace TagManager.ViewModel
             if (!selectedFolders?.Any() ?? false)
                 return;
 
+            OpenedFolders.AddRange(selectedFolders);
             foreach (var item in selectedFolders)
             {
                 var files = Directory.GetFiles(item);
                 foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
                 {
-                    if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase)==0))
+                    if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase) == 0))
                         return;
-                    Tracks.Add(new TrackViewModel(file, item, CounterForID++));
+                    try
+                    {
+                        Tracks.Add(new TrackViewModel(file, item, CounterForID++));
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(e.Message);
+                    }
+
                 }
             }
         }

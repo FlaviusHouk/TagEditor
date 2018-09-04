@@ -157,7 +157,9 @@
       <Name>ID3v2</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\cover.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\nextTrack.png" />
     <Resource Include="Resources\play.png" />

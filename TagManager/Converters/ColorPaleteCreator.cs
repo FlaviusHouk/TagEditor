@@ -46,15 +46,22 @@ namespace TagManager.Converters
             var image = new BitmapImage();
             using (var mem = new MemoryStream(data))
             {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.DecodePixelHeight = 128;
-                image.DecodePixelWidth = 128;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
+                try
+                {
+                    mem.Position = 0;
+                    image.BeginInit();
+                    image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.DecodePixelHeight = 128;
+                    image.DecodePixelWidth = 128;
+                    image.UriSource = null;
+                    image.StreamSource = mem;
+                    image.EndInit();
+                }
+                catch (Exception e)
+                {
+                    return new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                }
             }
             image.Freeze();
             Debug.WriteLine(DateTime.Now - start);
