@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace TagManager.Converters
@@ -20,17 +21,25 @@ namespace TagManager.Converters
                 return App.Current.FindResource("Cover") as BitmapImage;
 
             var image = new BitmapImage();
-            using (var mem = new MemoryStream(data))
+            try
             {
-                mem.Position = 0;
-                image.BeginInit();
-                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
-                image.CacheOption = BitmapCacheOption.OnLoad;
-                image.UriSource = null;
-                image.StreamSource = mem;
-                image.EndInit();
+                using (var mem = new MemoryStream(data))
+                {
+                    mem.Position = 0;
+                    image.BeginInit();
+                    image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.UriSource = null;
+                    image.StreamSource = mem;
+                    image.EndInit();
+                }
+                image.Freeze();
             }
-            image.Freeze();
+            catch (NotSupportedException e)
+            {
+                return Brushes.White;
+            }
+
             return image;
         }
 

@@ -139,7 +139,7 @@ namespace TagManager.Converters
 
         private void ClusterAnalysisAsync()
         {
-            Random rand = new Random(/*(int)DateTime.Now.Ticks*/);
+            Random rand = new Random((int)DateTime.Now.Ticks);
 
             for (int j = 0; j < 1; j++)
             {

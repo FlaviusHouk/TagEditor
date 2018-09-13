@@ -307,7 +307,10 @@ namespace TagManager.ViewModel
         
         public MainViewModel()
         {
-            InspectFolders(Properties.Settings.Default.OpenedFolders.Cast<string>());
+            if (Properties.Settings.Default.OpenedFolders != null)
+            {
+                InspectFolders(Properties.Settings.Default.OpenedFolders.Cast<string>());
+            }
             Tracks.CollectionChanged += Fols_CollectionChanged;
         }
 
