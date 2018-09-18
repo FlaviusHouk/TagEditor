@@ -1,5 +1,6 @@
 ![AUR](https://img.shields.io/aur/license/yaourt.svg)
 
+# Tag Editor
 
 TagEditor is a WPF application to manage your music library. 
  
