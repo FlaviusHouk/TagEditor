@@ -45,6 +45,7 @@ namespace TagManager.View
 			    ViewModelLocator.Cleanup();
 			    var folders =ViewModel.OpenedFolders;
 
+                Properties.Settings.Default.OpenedFolders.Clear();
 			    Properties.Settings.Default.OpenedFolders = new StringCollection();
 			    Properties.Settings.Default.OpenedFolders.AddRange(folders.ToArray());
                 Properties.Settings.Default.Save();
