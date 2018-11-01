@@ -21,18 +21,71 @@ namespace TagManager.ViewModel
         private const int ISRCCount = 12;
         private bool _isISRCSearching;
         private bool _isSaving;
-        private int CounterForID = 1;
+        private int _counterForID = 1;
         #endregion
 
         #region Properties
-
-        public string Source { get; set; } = @"C:/Users/danyil.hryhoriev/Desktop/cover.jpg";
 
         public List<string> OpenedFolders { get; private set; } = new List<string>();
 
         public ObservableCollection<TrackViewModel> Tracks { get; private set; } = new ObservableCollection<TrackViewModel>();
 
         public List<TrackViewModel> SelectedItems { get; set; } = new List<TrackViewModel>();
+
+        public string Progress
+        {
+            get
+            {
+                return $"{Value} / {Max}";
+            }
+        }
+
+        public bool IsInsp
+        {
+            get
+            {
+                return _isInspecting;
+            }
+            set
+            {
+                _isInspecting = value;
+                RaisePropertyChanged(nameof(IsInsp));
+                
+            }
+        }
+
+        public int Value
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                if (_value != value)
+                {
+                    _value = value;
+                    RaisePropertyChanged(nameof(Value));
+                    RaisePropertyChanged(nameof(Progress));
+                }
+            }
+        }
+
+        public int Max
+        {
+            get
+            {
+                return _max;
+            }
+            set
+            {
+                if (_max != value)
+                {
+                    _max = value;
+                    RaisePropertyChanged(nameof(Max));
+                }
+            }
+        }
 
         public bool IsISRCSearching
         {
@@ -104,13 +157,23 @@ namespace TagManager.ViewModel
             {
                 return _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand(()=> 
                 {
+                    _isRemoving = true;
                     if (MessageBox.Show("Do you want to remove this item(-s)", "Remove dialog", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
                         var itemsToRemove = SelectedItems.ToArray();
                         foreach (var item in itemsToRemove)
                         {
                             Tracks.Remove(item);
                         }
+
+                        _counterForID = 1;
+
+                        foreach (var item in Tracks)
+                        {
+                            item.ID = _counterForID;
+                            _counterForID += 1;
+                        }
                     };
+                    _isRemoving = false;
                 }));
             }
         }
@@ -121,8 +184,6 @@ namespace TagManager.ViewModel
             {
                 return _nextTrackcomaand ?? (_nextTrackcomaand = new RelayCommand(() =>
                 {
-                    Source = @"C:/Users/danyil.hryhoriev/Desktop/1.jpg";
-                    RaisePropertyChanged(nameof(Source));
                 }));
             }
         }
@@ -148,6 +209,8 @@ namespace TagManager.ViewModel
             {
                 return _selectionChangedCommand ?? (_selectionChangedCommand = new RelayCommand<object>(items =>
                   {
+                      if (_isRemoving || _isInspecting)
+                          return;
                       IEnumerable<object> set = items as IEnumerable<object>;
 
                       if (set == null)
@@ -205,6 +268,10 @@ namespace TagManager.ViewModel
         #region AsyncItems
         private Task _isrcSearchTask;
         private Task _saveTask;
+        private bool _isRemoving;
+        private bool _isInspecting;
+        private int _max;
+        private int _value;
 
         private async void SearchISRCAsync()
         {
@@ -284,30 +351,56 @@ namespace TagManager.ViewModel
         #region Methods
 
 
-        private void InspectFolders(IEnumerable<string> selectedFolders)
+        private async void InspectFolders(IEnumerable<string> selectedFolders)
         {
-            if (!selectedFolders?.Any() ?? false)
-                return;
-
-            OpenedFolders.AddRange(selectedFolders);
-            foreach (var item in selectedFolders)
+            Value = 1;
+            IsInsp = true;
+            Max = selectedFolders.Select(o => Directory.GetFiles(o, "*.mp3", SearchOption.TopDirectoryOnly).Count()).Sum();
+            await Task.Run(() =>
             {
-                var files = Directory.GetFiles(item);
-                foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
-                {
-                    if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase) == 0))
-                        return;
-                    try
-                    {
-                        Tracks.Add(new TrackViewModel(file, item, CounterForID++));
-                    }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(e.Message);
-                    }
+                var date = DateTime.Now;
+                System.Diagnostics.Debug.WriteLine("start");
+                if (!selectedFolders?.Any() ?? false)
+                    return;
+                List<TrackViewModel> tracks = new List<TrackViewModel>();
 
+                foreach (var item in selectedFolders)
+                {
+                    if (!OpenedFolders.Contains(item))
+                    {
+                        OpenedFolders.Add(item);
+                    }
+                    var files = Directory.GetFiles(item, "*.mp3");
+                    foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
+                    {
+                        if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase) == 0))
+                            continue;
+                        try
+                        {
+                            App.Current.Dispatcher.Invoke(() =>
+                            {
+                                Value++;
+                            });
+                            tracks.Add(new TrackViewModel(file, item, _counterForID++));
+                        }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show(e.Message);
+                        }
+
+                    }
                 }
-            }
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    foreach (var item in tracks)
+                    {
+                        Tracks.Add(item);
+                    }
+                    IsInsp = false;
+
+                });
+                System.Diagnostics.Debug.WriteLine("end   " + (DateTime.Now - date));
+            });
         }
 
         private TrackViewModel GenerateTempTrack()

@@ -395,14 +395,20 @@
                     BorderThickness="1"
                     CornerRadius="4"
                     DockPanel.Dock="Top">
-                    <StackPanel Orientation="Horizontal">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsInsp, Converter={StaticResource AntiBoolToVisibilityConverter}}">
                         <Button Command="{Binding OpenDialogCommand}">
                             <Image
                                 Width="32"
                                 RenderOptions.BitmapScalingMode="HighQuality"
                                 Source="{StaticResource OpenImage}" />
-                        </Button>
-                    </StackPanel>
+                         </Button>
+                        </StackPanel>
+                        <DockPanel LastChildFill="True" Visibility="{Binding IsInsp, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <TextBlock Height="16" DockPanel.Dock="Top" HorizontalAlignment="Center" Text="{Binding Progress}"/>
+                            <ProgressBar Height="26" Minimum="0" Value="{Binding Value}" Maximum="{Binding Max}" BorderThickness="0"></ProgressBar>
+                        </DockPanel>
+                    </Grid>
                 </Border>
 
                 <GroupBox Header="Треки">
@@ -412,7 +418,9 @@
                             BorderThickness="0"
                             ItemsSource="{Binding Source={StaticResource ItemsSource}}"
                             SelectionMode="Extended"
-                            Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
+                            VirtualizingPanel.IsVirtualizing="True"
+                            VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                            Visibility="{Binding IsInsp, Converter={StaticResource AntiBoolToVisibilityConverter}}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -454,7 +462,7 @@
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Visibility="{Binding HasItems, Converter={StaticResource AntiBoolToVisibilityConverter}}">
+                            Visibility="Collapsed">
                             <Button
                                 Width="200"
                                 Height="200"
