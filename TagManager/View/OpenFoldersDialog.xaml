@@ -11,6 +11,7 @@
     Height="400"
     MinWidth="600"
     MinHeight="400"
+    ShowInTaskbar="False"
     ResizeMode="NoResize"
     Template="{StaticResource CustomWindow}"
     WindowStartupLocation="CenterOwner"

@@ -14,7 +14,7 @@ namespace TagManager.Converters
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
 			var d = Double.Parse(value.ToString());
-			var res = d - 2 * d;
+			var res = -d;
 			return res;
 		}
 

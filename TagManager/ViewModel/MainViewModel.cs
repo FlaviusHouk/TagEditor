@@ -96,6 +96,24 @@ namespace TagManager.ViewModel
         private RelayCommand _isrcSearchCommand;
         private RelayCommand _insertISRCCommand;
         private RelayCommand _saveTags;
+        private RelayCommand _removeItemsCommand;
+
+        public RelayCommand RemoveItemsCommand
+        {
+            get
+            {
+                return _removeItemsCommand ?? (_removeItemsCommand = new RelayCommand(()=> 
+                {
+                    if (MessageBox.Show("Do you want to remove this item(-s)", "Remove dialog", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+                        var itemsToRemove = SelectedItems.ToArray();
+                        foreach (var item in itemsToRemove)
+                        {
+                            Tracks.Remove(item);
+                        }
+                    };
+                }));
+            }
+        }
 
         public RelayCommand NextTrackCommand
         {

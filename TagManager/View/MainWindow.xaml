@@ -139,7 +139,7 @@
 
     <DockPanel>
         <Border
-            BorderBrush="Gray"
+            BorderBrush="{StaticResource MainBrush}"
             BorderThickness="1"
             DockPanel.Dock="Bottom">
             <Grid>
@@ -163,11 +163,15 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="5,10"
-                    VerticalAlignment="Center">
+                    MaxWidth="300"
+                    HorizontalAlignment="Left"
+                    >
                     <TextBlock
                         FontFamily="Italic"
                         FontSize="20"
-                        Text="{Binding TempTrack.Title}" />
+                        Text="{Binding TempTrack.Title}" 
+                        TextTrimming="CharacterEllipsis"
+                        />
                     <TextBlock Text="{Binding TempTrack.Artist}" />
                 </StackPanel>
 
@@ -282,9 +286,11 @@
                         <TranslateTransform X="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=ActualWidth}" />
                     </TransformGroup>
                 </DockPanel.RenderTransform>
-
+                <DockPanel.InputBindings>
+                    <KeyBinding Gesture="Delete" Command="{Binding RemoveItemsCommand}"></KeyBinding>
+                </DockPanel.InputBindings>
                 <GroupBox
-                    MinWidth="260"
+                    Width="300"
                     DockPanel.Dock="Right"
                     Header="Тэги"
                     Visibility="{Binding HasItems, Converter={StaticResource BoolToVisibilityConverter}}">
