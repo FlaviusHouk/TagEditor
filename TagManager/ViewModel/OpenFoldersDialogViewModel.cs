@@ -138,16 +138,6 @@ namespace ViewModel
             }
         }
 
-        private void GetAvgLength(IEnumerable<FolderViewModel> fw)
-        {
-            _count += fw.Count();
-            foreach (var item in fw)
-            {
-                _sumOfLength += item.FolderName.Length;
-                GetAvgLength(item.SubFolders);
-            }
-        }
-
         public string[] GetSelectedFolders()
         {
             if (SelectedListFolders.Any())
