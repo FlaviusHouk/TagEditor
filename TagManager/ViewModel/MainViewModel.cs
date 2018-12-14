@@ -326,7 +326,7 @@ namespace TagManager.ViewModel
             }
         }
 
-        private async void SaveAsync(IEnumerable<TrackViewModel> tracks)
+        private Task SaveAsync(IEnumerable<TrackViewModel> tracks)
         {
             if (_saveTask == null)
             {
@@ -344,63 +344,62 @@ namespace TagManager.ViewModel
                 });
             }
 
-            await _saveTask;
+            return _saveTask;
         }
         #endregion
 
         #region Methods
 
 
-        private async void InspectFolders(IEnumerable<string> selectedFolders)
+        private Task InspectFolders(IEnumerable<string> selectedFolders)
         {
             Value = 1;
             IsInsp = true;
             Max = selectedFolders.Select(o => Directory.GetFiles(o, "*.mp3", SearchOption.TopDirectoryOnly).Count()).Sum();
-            await Task.Run(() =>
-            {
-                var date = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine("start");
-                if (!selectedFolders?.Any() ?? false)
-                    return;
-                List<TrackViewModel> tracks = new List<TrackViewModel>();
+            return Task.Run(() =>
+             {
+                 var date = DateTime.Now;
+                 System.Diagnostics.Debug.WriteLine("start");
+                 if (!selectedFolders?.Any() ?? false)
+                     return;
+                 List<TrackViewModel> tracks = new List<TrackViewModel>();
 
-                foreach (var item in selectedFolders)
-                {
-                    if (!OpenedFolders.Contains(item))
-                    {
-                        OpenedFolders.Add(item);
-                    }
-                    var files = Directory.GetFiles(item, "*.mp3");
-                    foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
-                    {
-                        if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase) == 0))
-                            continue;
-                        try
-                        {
-                            App.Current.Dispatcher.Invoke(() =>
-                            {
-                                Value++;
-                            });
-                            tracks.Add(new TrackViewModel(file, item, _counterForID++));
-                        }
-                        catch (Exception e)
-                        {
-                            MessageBox.Show(e.Message);
-                        }
+                 foreach (var item in selectedFolders)
+                 {
+                     if (!OpenedFolders.Contains(item))
+                     {
+                         OpenedFolders.Add(item);
+                     }
+                     var files = Directory.GetFiles(item, "*.mp3");
+                     foreach (var file in files.Where(o => o.Split('.').LastOrDefault() == "mp3"))
+                     {
+                         if (Tracks.Any(o => string.Compare(o.Path, file, StringComparison.OrdinalIgnoreCase) == 0))
+                             continue;
+                         try
+                         {
+                             App.Current.Dispatcher.Invoke(() =>
+                             {
+                                 Value++;
+                             });
+                             tracks.Add(new TrackViewModel(file, item, _counterForID++));
+                         }
+                         catch (Exception e)
+                         {
+                             MessageBox.Show(e.Message);
+                         }
 
-                    }
-                }
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    foreach (var item in tracks)
-                    {
-                        Tracks.Add(item);
-                    }
-                    IsInsp = false;
+                     }
+                 }
+                 App.Current.Dispatcher.Invoke(() =>
+                 {
+                     foreach (var item in tracks)
+                     {
+                         Tracks.Add(item);
+                     }
 
-                });
-                System.Diagnostics.Debug.WriteLine("end   " + (DateTime.Now - date));
-            });
+                 });
+                 System.Diagnostics.Debug.WriteLine("end   " + (DateTime.Now - date));
+             });
         }
 
         private TrackViewModel GenerateTempTrack()
