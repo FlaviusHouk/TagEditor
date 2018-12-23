@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
+﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -16,7 +16,7 @@ namespace TagManager.View
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : CustomWindow
+	public partial class MainWindow : CustomWindow, IViewFor<MainViewModel>
 	{
 	    public MainViewModel ViewModel
 	    {
@@ -24,26 +24,21 @@ namespace TagManager.View
 	        {
 	            return DataContext as MainViewModel;
 	        }
+            set
+            {
+                DataContext = value;
+            }
 	    }
 
-	    private RelayCommand _unselelectAllCommand;
 
-        public RelayCommand UnselectAllCommand
-        {
-            get { return _unselelectAllCommand ?? (_unselelectAllCommand = new RelayCommand(() =>
-            {
-                ListView.UnselectAll();
-            })); }
-        }
+        object IViewFor.ViewModel { get => DataContext; set => DataContext = value; }
 
-
-		public MainWindow()
+        public MainWindow()
 		{
 			InitializeComponent();
 			Closing += (s, e) =>
 			{
-			    ViewModelLocator.Cleanup();
-			    var folders =ViewModel.OpenedFolders;
+			    var folders = ViewModel.OpenedFolders;
 
                 Properties.Settings.Default.OpenedFolders.Clear();
 			    Properties.Settings.Default.OpenedFolders = new StringCollection();

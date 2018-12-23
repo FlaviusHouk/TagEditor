@@ -1,12 +1,12 @@
-﻿using GalaSoft.MvvmLight;
+﻿using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace ViewModel
+namespace TagManager.ViewModel
 {
-    public class FolderViewModel : ViewModelBase
+    public class FolderViewModel : ReactiveObject
     {
         private bool _isSelected;
         private bool _isExpanded;
@@ -42,9 +42,9 @@ namespace ViewModel
 
             set
             {
-                _isSelected = value;
+                this.RaiseAndSetIfChanged(ref _isSelected, value);
+
                 GetSubFolders(value);
-                RaisePropertyChanged(nameof(IsSelected));
             }
         }
 
@@ -57,13 +57,13 @@ namespace ViewModel
 
             set
             {
-                _isExpanded = value;
+                this.RaiseAndSetIfChanged(ref _isExpanded, value);
+
                 if (_isExpanded && Parent != null)
                 {
                     Parent.IsExpanded = true;
                 }
                 GetSubFolders(value);
-                RaisePropertyChanged(nameof(IsExpanded));
             }
         }
 

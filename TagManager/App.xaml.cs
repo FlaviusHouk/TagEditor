@@ -1,5 +1,7 @@
 ﻿using System.Windows;
-using GalaSoft.MvvmLight.Threading;
+using TagManager.Services;
+using TagManager.ViewModel;
+using TagManager.ViewModel.Services;
 
 namespace TagManager
 {
@@ -8,9 +10,20 @@ namespace TagManager
 	/// </summary>
 	public partial class App : Application
 	{
-		static App()
-		{
-			DispatcherHelper.Initialize();
-		}
+        public MainViewModel MainViewModel
+        {
+            get;
+        }
+
+        public App()
+        {
+            IDialogService dialogService = new DialogService();
+            IDispatcherService dispatcherService = new DispatcherService();
+            IResourceService resourceService = new ResourceService();
+
+            MainViewModel = new MainViewModel(dialogService, dispatcherService, resourceService);
+
+            Resources.Add("MainViewModel", MainViewModel);
+        }
 	}
 }

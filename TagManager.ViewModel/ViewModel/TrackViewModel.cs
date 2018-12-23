@@ -1,11 +1,11 @@
-﻿using GalaSoft.MvvmLight;
+﻿using ReactiveUI;
 using ID3v2;
 using System;
 using System.Linq;
 
 namespace TagManager.ViewModel
 {
-    public class TrackViewModel : ObservableObject
+    public class TrackViewModel : ReactiveObject
     {
         #region Fields
         private Tag _trackTag;
@@ -53,8 +53,7 @@ namespace TagManager.ViewModel
             get { return _id; }
             set
             {
-                _id = value;
-                RaisePropertyChanged(nameof(ID));
+                this.RaiseAndSetIfChanged(ref _id, value);
             }
         }
 
@@ -63,8 +62,7 @@ namespace TagManager.ViewModel
             get { return _name; }
             set
             {
-                _name = value;
-                RaisePropertyChanged(nameof(Name));
+                this.RaiseAndSetIfChanged(ref _name, value);
             }
         }
 
@@ -74,8 +72,7 @@ namespace TagManager.ViewModel
             get { return _holder; }
             set
             {
-                _holder = value;
-                RaisePropertyChanged(nameof(Holder));
+                this.RaiseAndSetIfChanged(ref _holder, value);
             }
         }
 
@@ -84,8 +81,7 @@ namespace TagManager.ViewModel
             get { return _title; }
             set
             {
-                _title = value;
-                RaisePropertyChanged(nameof(Title));
+                this.RaiseAndSetIfChanged(ref _title, value);
             }
         }
 
@@ -94,8 +90,7 @@ namespace TagManager.ViewModel
             get { return _composer; }
             set
             {
-                _composer = value;
-                RaisePropertyChanged(nameof(Composer));
+                this.RaiseAndSetIfChanged(ref _composer, value);
             }
         }
 
@@ -104,8 +99,7 @@ namespace TagManager.ViewModel
             get { return _album; }
             set
             {
-                _album = value;
-                RaisePropertyChanged(nameof(Album));
+                this.RaiseAndSetIfChanged(ref _album, value);
             }
         }
 
@@ -114,8 +108,7 @@ namespace TagManager.ViewModel
             get { return _tempo; }
             set
             {
-                _tempo = value;
-                RaisePropertyChanged(nameof(Tempo));
+                this.RaiseAndSetIfChanged(ref _tempo, value);
             }
         }
 
@@ -124,8 +117,7 @@ namespace TagManager.ViewModel
             get { return _genre; }
             set
             {
-                _genre = value;
-                RaisePropertyChanged(nameof(Genre));
+                this.RaiseAndSetIfChanged(ref _genre, value);
             }
         }
 
@@ -134,8 +126,7 @@ namespace TagManager.ViewModel
             get { return _copyright; }
             set
             {
-                _copyright = value;
-                RaisePropertyChanged(nameof(Copyright));
+                this.RaiseAndSetIfChanged(ref _copyright, value);
             }
         }
 
@@ -144,8 +135,7 @@ namespace TagManager.ViewModel
             get { return _recDate; }
             set
             {
-                _recDate = value;
-                RaisePropertyChanged(nameof(RecDate));
+                this.RaiseAndSetIfChanged(ref _recDate, value);
             }
         }
 
@@ -154,8 +144,7 @@ namespace TagManager.ViewModel
             get { return _playlistDelay; }
             set
             {
-                _playlistDelay = value;
-                RaisePropertyChanged(nameof(PlaylistDelay));
+                this.RaiseAndSetIfChanged(ref _playlistDelay, value);
             }
         }
 
@@ -164,8 +153,7 @@ namespace TagManager.ViewModel
             get { return _lyrics; }
             set
             {
-                _lyrics = value;
-                RaisePropertyChanged(nameof(Lyrics));
+                this.RaiseAndSetIfChanged(ref _lyrics, value);
             }
         }
 
@@ -174,8 +162,7 @@ namespace TagManager.ViewModel
             get { return _recTime; }
             set
             {
-                _recTime = value;
-                RaisePropertyChanged(nameof(RecTime));
+                this.RaiseAndSetIfChanged(ref _recTime, value);
             }
         }
 
@@ -184,8 +171,7 @@ namespace TagManager.ViewModel
             get { return _key; }
             set
             {
-                _key = value;
-                RaisePropertyChanged(nameof(Key));
+                this.RaiseAndSetIfChanged(ref _key, value);
             }
         }
 
@@ -194,8 +180,7 @@ namespace TagManager.ViewModel
             get { return _lang; }
             set
             {
-                _lang = value;
-                RaisePropertyChanged(nameof(Lang));
+                this.RaiseAndSetIfChanged(ref _lang, value);
             }
         }
 
@@ -204,8 +189,7 @@ namespace TagManager.ViewModel
             get { return _length; }
             set
             {
-                _length = value;
-                RaisePropertyChanged(nameof(Length));
+                this.RaiseAndSetIfChanged(ref _length, value);
             }
         }
 
@@ -214,8 +198,7 @@ namespace TagManager.ViewModel
             get { return _artist; }
             set
             {
-                _artist = value;
-                RaisePropertyChanged(nameof(Artist));
+                this.RaiseAndSetIfChanged(ref _artist, value);
             }
         }
 
@@ -224,8 +207,7 @@ namespace TagManager.ViewModel
             get { return _publisher; }
             set
             {
-                _publisher = value;
-                RaisePropertyChanged(nameof(Publisher));
+                this.RaiseAndSetIfChanged(ref _publisher, value);
             }
         }
 
@@ -234,8 +216,7 @@ namespace TagManager.ViewModel
             get { return _trackNumber; }
             set
             {
-                _trackNumber = value;
-                RaisePropertyChanged(nameof(TrackNumber));
+                this.RaiseAndSetIfChanged(ref _trackNumber, value);
             }
         }
 
@@ -244,8 +225,7 @@ namespace TagManager.ViewModel
             get { return _fullDate; }
             set
             {
-                _fullDate = value;
-                RaisePropertyChanged(nameof(FullDate));
+                this.RaiseAndSetIfChanged(ref _fullDate, value);
             }
         }
 
@@ -254,8 +234,7 @@ namespace TagManager.ViewModel
             get { return _mediaSize; }
             set
             {
-                _mediaSize = value;
-                RaisePropertyChanged(nameof(MediaSize));
+                this.RaiseAndSetIfChanged(ref _mediaSize, value);
             }
         }
 
@@ -264,8 +243,7 @@ namespace TagManager.ViewModel
             get { return _ISRC; }
             set
             {
-                _ISRC = value;
-                RaisePropertyChanged(nameof(ISRC));
+                this.RaiseAndSetIfChanged(ref _ISRC, value);
             }
         }
 
@@ -274,8 +252,7 @@ namespace TagManager.ViewModel
             get { return _year; }
             set
             {
-                _year = value;
-                RaisePropertyChanged(nameof(Year));
+                this.RaiseAndSetIfChanged(ref _year, value);
             }
         }
 
@@ -284,8 +261,7 @@ namespace TagManager.ViewModel
             get { return _subTitle; }
             set
             {
-                _subTitle = value;
-                RaisePropertyChanged(nameof(SubTitle));
+                this.RaiseAndSetIfChanged(ref _subTitle, value);
             }
         }
 
@@ -297,6 +273,19 @@ namespace TagManager.ViewModel
             }
         }
         #endregion
+
+        private bool _isSelected;
+        public bool IsSelected
+        {
+            get
+            {
+                return _isSelected;
+            }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _isSelected, value);
+            }
+        }
 
         public TrackViewModel(string path, string folder, int id)
         {

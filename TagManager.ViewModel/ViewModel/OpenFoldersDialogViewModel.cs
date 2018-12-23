@@ -1,20 +1,23 @@
-﻿using GalaSoft.MvvmLight;
+﻿using ReactiveUI;
 using System.Collections.ObjectModel;
 using System;
-using GalaSoft.MvvmLight.CommandWpf;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Reactive;
+using System.Reactive.Linq;
 
-namespace ViewModel
+namespace TagManager.ViewModel
 {
 
-    public class OpenFoldersDialogViewModel : ViewModelBase
+    public class OpenFoldersDialogViewModel : ReactiveObject
     {
         private int _sumOfLength;
         private int _count;
         private string _curFolderPath;
         private FolderViewModel _selectedTreeViewFolder;
+
+        public MainViewModel Owner { get; }
 
         public ObservableCollection<FolderViewModel> Folders { get; set; } = new ObservableCollection<FolderViewModel>();
 
@@ -23,9 +26,9 @@ namespace ViewModel
             get { return _selectedTreeViewFolder; }
             set
             {
-                _selectedTreeViewFolder = value;
+                this.RaiseAndSetIfChanged(ref _selectedTreeViewFolder, value);
+
                 CurrentFolderPath = _selectedTreeViewFolder.Path;
-                RaisePropertyChanged(nameof(SelectedTreeFolder));
             }
         }
 
@@ -34,30 +37,31 @@ namespace ViewModel
             get; set;
         } = new ObservableCollection<FolderViewModel>();
 
-        private RelayCommand<object> _selectionTreeChangedCommand;
+        private ReactiveCommand<object, Unit> _selectionTreeChangedCommand;
 
-        public RelayCommand<object> SelectionTreeChangedCommand
+        public ReactiveCommand<object, Unit> SelectionTreeChangedCommand
         {
             get
             {
-                return _selectionTreeChangedCommand ?? (_selectionTreeChangedCommand = new RelayCommand<object>((item) =>
+                return _selectionTreeChangedCommand ?? (_selectionTreeChangedCommand = ReactiveCommand.Create<object, Unit>((item) =>
                 {
                     SelectedTreeFolder = item as FolderViewModel;
-                    RaisePropertyChanged(nameof(HasItem));
-                    RaisePropertyChanged(nameof(ListPlaceText));
-                    RaisePropertyChanged(nameof(CanOK));
+
+                    return Unit.Default;
                 }));
             }
         }
 
+        private readonly ObservableAsPropertyHelper<bool> _canOK;
         public bool CanOK
         {
-            get { return SelectedListFolders.Any() || SelectedTreeFolder !=null; }
+            get { return _canOK.Value; }
         }
 
+        private readonly ObservableAsPropertyHelper<bool> _hasItem;
         public bool HasItem
         {
-            get { return SelectedTreeFolder !=null && Directory.GetDirectories(SelectedTreeFolder.Path).Any(); }
+            get { return _hasItem.Value; }
         }
 
         public void SelectInListBox(FolderViewModel folderViewModel)
@@ -66,13 +70,13 @@ namespace ViewModel
             folderViewModel.Parent.IsExpanded = true;
         }
 
-        private RelayCommand<object> _selectionListChangedCommand;
+        private ReactiveCommand<object, Unit> _selectionListChangedCommand;
 
-        public RelayCommand<object> SelectionListChangedCommand
+        public ReactiveCommand<object, Unit> SelectionListChangedCommand
         {
             get
             {
-                return _selectionListChangedCommand ?? (_selectionListChangedCommand = new RelayCommand<object>((item) =>
+                return _selectionListChangedCommand ?? (_selectionListChangedCommand = ReactiveCommand.Create<object, Unit>((item) =>
                 {
                     SelectedListFolders.Clear();
                     var items = (item as IEnumerable<object>).Cast<FolderViewModel>();
@@ -80,7 +84,8 @@ namespace ViewModel
                     {
                         SelectedListFolders.Add(fold);
                     }
-                    RaisePropertyChanged(nameof(CanOK));
+
+                    return Unit.Default;
                 }));
             }
         }
@@ -94,8 +99,7 @@ namespace ViewModel
 
             set
             {
-                _curFolderPath = value;
-                RaisePropertyChanged(nameof(CurrentFolderPath));
+                this.RaiseAndSetIfChanged(ref _curFolderPath, value);
             }
         }
 
@@ -104,26 +108,45 @@ namespace ViewModel
             get { return CanOK && Directory.GetFiles(SelectedTreeFolder.Path).Where(o => o.Split('.').LastOrDefault() == "mp3").Any(); }
         }
 
+        private readonly ObservableAsPropertyHelper<string> _listPlaceText;
         public string ListPlaceText
         {
             get
             {
-                if (SelectedTreeFolder != null && HasFolderTracks)
-                {
-                    return $"В папке {Directory.GetFiles(SelectedTreeFolder.Path).Where(o => o.Split('.').LastOrDefault() == "mp3").Count()} трек(-а)";
-                }
-
-                else if (SelectedTreeFolder!=null && !HasItem)
-                {
-                    return "Папка пуста";
-                }
-                
-                return "Выберите папку";
+                return _listPlaceText.Value;
             }
         }
 
-        public OpenFoldersDialogViewModel()
+        public OpenFoldersDialogViewModel(MainViewModel owner)
         {
+            Owner = owner;
+
+            _hasItem = this.WhenAnyValue(x => x.SelectedTreeFolder)
+                            .Select(val => val != null && Directory.GetDirectories(val.Path).Any())
+                            .ToProperty(this, x => x.HasItem, false, false, System.Reactive.Concurrency.ImmediateScheduler.Instance);
+
+            _canOK = this.WhenAnyValue(x => x.SelectedTreeFolder, x => x.SelectedListFolders.Count)
+                         .Select(val => val.Item2 > 0 || val.Item1 != null)
+                         .ToProperty(this, x => x.CanOK, false, false, System.Reactive.Concurrency.ImmediateScheduler.Instance);
+
+            _listPlaceText = this.WhenAnyValue(x => x.SelectedTreeFolder)
+                                 .Select(val =>
+                                 {
+                                     if (val != null && HasFolderTracks)
+                                     {
+                                         return $"В папке {Directory.GetFiles(val.Path).Where(o => Path.GetExtension(o) == ".mp3").Count()} трек(-а)";
+                                     }
+
+                                     else if (val != null && !HasItem)
+                                     {
+                                         return "Папка пуста";
+                                     }
+
+                                     return "Выберите папку";
+                                 })
+                                 .ToProperty(this, x => x.ListPlaceText, string.Empty, false, System.Reactive.Concurrency.ImmediateScheduler.Instance);
+            
+
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.Favorites)));
             Folders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)));

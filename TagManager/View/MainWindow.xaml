@@ -5,18 +5,17 @@
     xmlns:controls="clr-namespace:TagManager.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:ignore="http://www.galasoft.ch/ignore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Name="customWindow"
     Title="TagManager"
     MinWidth="800"
     MinHeight="600"
-    DataContext="{Binding Main, Source={StaticResource Locator}}"
+    DataContext="{StaticResource MainViewModel}"
     ResizeMode="NoResize"
     Template="{StaticResource CustomWindow}"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
-    mc:Ignorable="d ignore">
+    mc:Ignorable="d">
 
     <Window.Resources>
         <CollectionViewSource x:Key="ItemsSource" Source="{Binding Tracks}">
@@ -116,7 +115,7 @@
         </Storyboard>
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Command="{Binding UnselectAllCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type controls:CustomWindow}}}" Gesture="ESC" />
+        <KeyBinding Command="{Binding UnselectAllCommand, Source={StaticResource MainViewModel}}" Gesture="ESC" />
     </Window.InputBindings>
     <controls:CustomWindow.Triggers>
         <EventTrigger RoutedEvent="ButtonBase.Click" SourceName="button1">
@@ -247,7 +246,7 @@
                     <Button
                         x:Name="button1"
                         Command="{Binding ChangeModeCommand}"
-                        CommandParameter="true"
+                        CommandParameter="True"
                         Visibility="{Binding IsPlayerMode, Converter={StaticResource AntiBoolToVisibilityConverter}}">
                         <Button.RenderTransform>
                             <TransformGroup>
@@ -298,7 +297,7 @@
                         <StackPanel
                             VerticalAlignment="Center"
                             DataContext="{Binding TempTrack}"
-                            Visibility="{Binding Main.HasSelected, Source={StaticResource Locator}, Converter={StaticResource BoolToVisibilityConverter}}">
+                            Visibility="{Binding HasSelected, Source={StaticResource MainViewModel}, Converter={StaticResource BoolToVisibilityConverter}}">
                             <StackPanel.Resources>
 
                                 <Style TargetType="TextBlock">
@@ -334,8 +333,8 @@
                                         Height="20"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Command="{Binding Main.ISRCSearchCommand, Source={StaticResource Locator}}"
-                                        Visibility="{Binding Main.IsISRCSearching, Source={StaticResource Locator}, Converter={StaticResource AntiBoolToVisibilityConverter}}">
+                                        Command="{Binding ISRCSearchCommand, Source={StaticResource MainViewModel}}"
+                                        Visibility="{Binding IsISRCSearching, Source={StaticResource MainViewModel}, Converter={StaticResource AntiBoolToVisibilityConverter}}">
                                         <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{StaticResource SearchImage}" />
                                     </Button>
                                     <Viewbox
@@ -344,7 +343,7 @@
                                         Margin="5"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                        Visibility="{Binding Main.IsISRCSearching, Source={StaticResource Locator}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Visibility="{Binding IsISRCSearching, Source={StaticResource MainViewModel}, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <controls:CircularProgressBar />
                                     </Viewbox>
                                 </Grid>
@@ -355,21 +354,21 @@
                                     Text="{Binding ISRC, UpdateSourceTrigger=PropertyChanged}"
                                     TextAlignment="Center">
                                     <controls:MaskedTextBox.InputBindings>
-                                        <KeyBinding Command="{Binding Main.InsertISRCCommand, Source={StaticResource Locator}}" Gesture="CTRL+V" />
+                                        <KeyBinding Command="{Binding InsertISRCCommand, Source={StaticResource MainViewModel}}" Gesture="CTRL+V" />
                                     </controls:MaskedTextBox.InputBindings>
                                 </controls:MaskedTextBox>
 
                                 <Grid>
                                     <Button
                                         Margin="0,4,0,0"
-                                        Command="{Binding Main.SaveTags, Source={StaticResource Locator}}"
+                                        Command="{Binding SaveTags, Source={StaticResource MainViewModel}}"
                                         Content="Save It"
-                                        Visibility="{Binding Main.IsSaving, Source={StaticResource Locator}, Converter={StaticResource AntiBoolToVisibilityConverter}}" />
+                                        Visibility="{Binding IsSaving, Source={StaticResource MainViewModel}, Converter={StaticResource AntiBoolToVisibilityConverter}}" />
                                     <Viewbox
                                         Width="20"
                                         Height="20"
                                         Margin="0,4,0,0"
-                                        Visibility="{Binding Main.IsSaving, Source={StaticResource Locator}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Visibility="{Binding IsSaving, Source={StaticResource MainViewModel}, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <controls:CircularProgressBar />
                                     </Viewbox>
                                 </Grid>
@@ -449,6 +448,11 @@
                                     </GroupStyle.ContainerStyle>
                                 </GroupStyle>
                             </ListView.GroupStyle>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn DisplayMemberBinding="{Binding ID}" Header="ID" />

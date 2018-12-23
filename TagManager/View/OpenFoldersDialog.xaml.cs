@@ -1,41 +1,35 @@
-﻿using GalaSoft.MvvmLight.CommandWpf;
+﻿using ReactiveUI;
 using System.Windows.Input;
 using TagManager.Controls;
-using ViewModel;
+using TagManager.ViewModel;
 
 namespace TagManager.View
 {
     /// <summary>
     /// Interaction logic for OpenFoldersDialog.xaml
     /// </summary>
-    public partial class OpenFoldersDialog : CustomWindow
+    public partial class OpenFoldersDialog : CustomWindow, IViewFor<OpenFoldersDialogViewModel>
     {
-        private RelayCommand _OKCommand;
-
-        public RelayCommand OKCommand
-        {
-            get
-            {
-                return _OKCommand ?? (_OKCommand = new RelayCommand(() =>
-                {
-                    DialogResult = true;
-                    Close();
-                }));
-            }
-
-        }
-
         public OpenFoldersDialog()
         {
             InitializeComponent();
         }
 
+        public OpenFoldersDialogViewModel ViewModel { get => DataContext as OpenFoldersDialogViewModel; set => DataContext = value; }
+        object IViewFor.ViewModel { get => DataContext; set => DataContext = value; }
+
         private void DockPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ClickCount == 2)
             {
-                (this.DataContext as OpenFoldersDialogViewModel).SelectInListBox(foldLB.SelectedItem as FolderViewModel);
+                ViewModel.SelectInListBox(foldLB.SelectedItem as FolderViewModel);
             }
+        }
+
+        private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            DialogResult = true;
+            Close();
         }
     }
 }

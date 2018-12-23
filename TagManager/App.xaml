@@ -5,14 +5,11 @@
     xmlns:controls="clr-namespace:TagManager.Controls"
     xmlns:conv="clr-namespace:TagManager.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:ignore="http://www.galasoft.ch/ignore"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="clr-namespace:TagManager.ViewModel"
     StartupUri="View/MainWindow.xaml"
-    mc:Ignorable="d ignore">
+    mc:Ignorable="d">
 
     <Application.Resources>
-        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
 
         <conv:DoubleToMarginConverter x:Key="DoubleToMarginConverter" />
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />

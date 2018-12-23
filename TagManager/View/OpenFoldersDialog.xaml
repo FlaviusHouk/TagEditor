@@ -111,7 +111,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Orientation="Horizontal">
-            <Button Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=OKCommand}" IsEnabled="{Binding CanOK}">
+            <Button IsEnabled="{Binding CanOK, UpdateSourceTrigger=PropertyChanged}" IsDefault="True" Click="Button_Click">
                 <Image
                     Width="48"
                     RenderOptions.BitmapScalingMode="HighQuality"
