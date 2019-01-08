@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace WebRequests
+namespace TagManager.WebRequest
 {
 	public class ISRCRequestManager
     {
@@ -51,10 +51,10 @@ namespace WebRequests
 			return response;
 		}
 
-		public SearchResponse GetFromISRC(string ISRC)
+		public SearchResponse GetFromIsrc(string isrc)
 		{ 
-			var myISRC = "{searchFields: {isrcCode:\""+ ISRC +"\"}, showReleases: true, start: 0, number:10}";
-			var jo = JObject.Parse(myISRC);
+			var myIsrc = "{searchFields: {isrcCode:\""+ isrc +"\"}, showReleases: true, start: 0, number:10}";
+			var jo = JObject.Parse(myIsrc);
 			var query = new StringContent(jo.ToString(), Encoding.UTF8, "application/json");
 			var res = _client.PostAsync(searchUri, query);
 			var resAsString = res.Result.Content.ReadAsStringAsync().Result;

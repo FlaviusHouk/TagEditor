@@ -9,8 +9,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using TagManager.View;
+using TagManager.WebRequest;
 using ViewModel;
-using WebRequests;
 
 namespace TagManager.ViewModel
 {
@@ -21,14 +21,14 @@ namespace TagManager.ViewModel
         private const int ISRCCount = 12;
         private bool _isISRCSearching;
         private bool _isSaving;
-        private int _counterForID = 1;
+        private int _counterForId = 1;
         #endregion
 
         #region Properties
 
-        public List<string> OpenedFolders { get; private set; } = new List<string>();
+        public List<string> OpenedFolders { get; } = new List<string>();
 
-        public ObservableCollection<TrackViewModel> Tracks { get; private set; } = new ObservableCollection<TrackViewModel>();
+        public ObservableCollection<TrackViewModel> Tracks { get; } = new ObservableCollection<TrackViewModel>();
 
         public List<TrackViewModel> SelectedItems { get; set; } = new List<TrackViewModel>();
 
@@ -165,25 +165,16 @@ namespace TagManager.ViewModel
                             Tracks.Remove(item);
                         }
 
-                        _counterForID = 1;
+                        _counterForId = 1;
 
                         foreach (var item in Tracks)
                         {
-                            item.ID = _counterForID;
-                            _counterForID += 1;
+                            item.ID = _counterForId;
+                            _counterForId += 1;
                         }
-                    };
-                    _isRemoving = false;
-                }));
-            }
-        }
+                    }
 
-        public RelayCommand NextTrackCommand
-        {
-            get
-            {
-                return _nextTrackcomaand ?? (_nextTrackcomaand = new RelayCommand(() =>
-                {
+                    _isRemoving = false;
                 }));
             }
         }
@@ -247,7 +238,7 @@ namespace TagManager.ViewModel
 
         public RelayCommand ISRCSearchCommand
         {
-            get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(() => { SearchISRCAsync(); }));}
+            get { return _isrcSearchCommand ?? (_isrcSearchCommand = new RelayCommand(SearchIsrcAsync));}
         }
 
         public RelayCommand SaveTags
@@ -273,7 +264,7 @@ namespace TagManager.ViewModel
         private int _max;
         private int _value;
 
-        private async void SearchISRCAsync()
+        private async void SearchIsrcAsync()
         {
             if (_isrcSearchTask == null)
             {
@@ -281,26 +272,27 @@ namespace TagManager.ViewModel
                 {
                     IsISRCSearching = true;
                     ISRCRequestManager rm = ISRCRequestManager.Inst;
-                    DisplayDoc result = null;
+                    DisplayDoc result;
                     var re = new Regex("#.*?;");
                     var isrc = re.Replace(TempTrack.ISRC, ";");
                     if (isrc.Length == ISRCCount)
                     {
-                        result = rm.GetFromISRC(isrc).DisplayDocs.FirstOrDefault();
+                        result = rm.GetFromIsrc(isrc).DisplayDocs.FirstOrDefault();
 
-                        TempTrack.Artist = string.IsNullOrEmpty(result.ArtistName) ? TempTrack.Artist : result.ArtistName;
-                        TempTrack.Title = string.IsNullOrEmpty(result.TrackTitle) ? TempTrack.Title : result.TrackTitle;
-                        TempTrack.Year = string.IsNullOrEmpty(result.RecordingYear) ? TempTrack.Year : result.RecordingYear;
+                        TempTrack.Artist = string.IsNullOrEmpty(result?.ArtistName) ? TempTrack.Artist : result.ArtistName;
+                        TempTrack.Title = string.IsNullOrEmpty(result?.TrackTitle) ? TempTrack.Title : result.TrackTitle;
+                        TempTrack.Year = string.IsNullOrEmpty(result?.RecordingYear) ? TempTrack.Year : result.RecordingYear;
                     }
-                    else if (!string.IsNullOrEmpty(TempTrack.Artist) && !String.IsNullOrEmpty(TempTrack.Title))
+                    else if (!string.IsNullOrEmpty(TempTrack.Artist) && !string.IsNullOrEmpty(TempTrack.Title))
                     {
                         var response = rm.GetFromData(TempTrack.Artist, TempTrack.Title).DisplayDocs;
                         var req = response.Where(x =>
                             string.CompareOrdinal(x.ArtistName, TempTrack.Artist) == 0 &&
                             string.CompareOrdinal(x.TrackTitle, TempTrack.Title) == 0).ToArray();
+
                         if (req.Any())
                         {
-                            if (req.Length > 1 && string.IsNullOrEmpty(TempTrack.Year.ToString()))
+                            if (req.Length > 1 && string.IsNullOrEmpty(TempTrack.Year))
                             {
                                 result = req.FirstOrDefault();
                             }
@@ -309,12 +301,11 @@ namespace TagManager.ViewModel
                                 result = req.FirstOrDefault();
                             }
 
-                            TempTrack.ISRC = result.IsrcCode;
+                            TempTrack.ISRC = result?.IsrcCode;
                         }
                         else
                         {
                             MessageBox.Show("Записей не найдено");
-                            return;
                         }
                     }
                 }).ContinueWith(o =>
@@ -353,18 +344,19 @@ namespace TagManager.ViewModel
 
         private async void InspectFolders(IEnumerable<string> selectedFolders)
         {
-            Value = 1;
+            var enumerable = selectedFolders.ToList();
+
             IsInsp = true;
-            Max = selectedFolders.Select(o => Directory.GetFiles(o, "*.mp3", SearchOption.TopDirectoryOnly).Count()).Sum();
+
+
+            Max = enumerable.Select(o => Directory.GetFiles(o, "*.mp3", SearchOption.TopDirectoryOnly).Count()).Sum();
             await Task.Run(() =>
             {
                 var date = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine("start");
-                if (!selectedFolders?.Any() ?? false)
-                    return;
+
                 List<TrackViewModel> tracks = new List<TrackViewModel>();
 
-                foreach (var item in selectedFolders)
+                foreach (var item in enumerable)
                 {
                     if (!OpenedFolders.Contains(item))
                     {
@@ -377,11 +369,11 @@ namespace TagManager.ViewModel
                             continue;
                         try
                         {
-                            App.Current.Dispatcher.Invoke(() =>
+                            Application.Current.Dispatcher.Invoke(() =>
                             {
                                 Value++;
                             });
-                            tracks.Add(new TrackViewModel(file, item, _counterForID++));
+                            tracks.Add(new TrackViewModel(file, item, _counterForId++));
                         }
                         catch (Exception e)
                         {
@@ -390,7 +382,7 @@ namespace TagManager.ViewModel
 
                     }
                 }
-                App.Current.Dispatcher.Invoke(() =>
+                Application.Current.Dispatcher.Invoke(() =>
                 {
                     foreach (var item in tracks)
                     {

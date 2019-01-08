@@ -1,6 +1,7 @@
 ﻿using GalaSoft.MvvmLight.CommandWpf;
 using System.Windows.Input;
 using TagManager.Controls;
+using TagManager.ViewModel;
 using ViewModel;
 
 namespace TagManager.View

@@ -1,12 +1,13 @@
-﻿using GalaSoft.MvvmLight;
-using System.Collections.ObjectModel;
-using System;
-using GalaSoft.MvvmLight.CommandWpf;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using ViewModel;
 
-namespace ViewModel
+namespace TagManager.ViewModel
 {
 
     public class OpenFoldersDialogViewModel : ViewModelBase
@@ -25,6 +26,7 @@ namespace ViewModel
             {
                 _selectedTreeViewFolder = value;
                 CurrentFolderPath = _selectedTreeViewFolder.Path;
+
                 RaisePropertyChanged(nameof(SelectedTreeFolder));
             }
         }
@@ -43,6 +45,7 @@ namespace ViewModel
                 return _selectionTreeChangedCommand ?? (_selectionTreeChangedCommand = new RelayCommand<object>((item) =>
                 {
                     SelectedTreeFolder = item as FolderViewModel;
+
                     RaisePropertyChanged(nameof(HasItem));
                     RaisePropertyChanged(nameof(ListPlaceText));
                     RaisePropertyChanged(nameof(CanOK));
@@ -76,10 +79,12 @@ namespace ViewModel
                 {
                     SelectedListFolders.Clear();
                     var items = (item as IEnumerable<object>).Cast<FolderViewModel>();
+
                     foreach (var fold in items)
                     {
                         SelectedListFolders.Add(fold);
                     }
+
                     RaisePropertyChanged(nameof(CanOK));
                 }));
             }
@@ -113,11 +118,11 @@ namespace ViewModel
                     return $"В папке {Directory.GetFiles(SelectedTreeFolder.Path).Where(o => o.Split('.').LastOrDefault() == "mp3").Count()} трек(-а)";
                 }
 
-                else if (SelectedTreeFolder!=null && !HasItem)
+                if (SelectedTreeFolder!=null && !HasItem)
                 {
                     return "Папка пуста";
                 }
-                
+
                 return "Выберите папку";
             }
         }

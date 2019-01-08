@@ -14,7 +14,6 @@ namespace ViewModel
         public string Path
         {
             get;
-            private set;
         }
 
         public string FolderName
@@ -22,15 +21,16 @@ namespace ViewModel
             get
             {
                 var parts = Path.Split('\\');
+
                 return parts.Length >= 2 && !string.IsNullOrEmpty(parts.LastOrDefault()) ? (parts.LastOrDefault().Length > 40 ? $"{parts.LastOrDefault().Substring(0, 30)}..." : parts.LastOrDefault()) : parts.FirstOrDefault();
             }
         }
 
-        public FolderViewModel Parent { get; private set; }
+        public FolderViewModel Parent { get; }
 
         public ObservableCollection<FolderViewModel> SubFolders
         {
-            get; private set;
+            get;
         } = new ObservableCollection<FolderViewModel>();
 
         public bool IsSelected
@@ -89,7 +89,10 @@ namespace ViewModel
                     {
                         SubFolders.Add(new FolderViewModel(item, this));
                     }
-                    catch (Exception e) { }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
                 }
             }
         }

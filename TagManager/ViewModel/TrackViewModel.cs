@@ -1,6 +1,5 @@
 ﻿using GalaSoft.MvvmLight;
 using ID3v2;
-using System;
 using System.Linq;
 
 namespace TagManager.ViewModel
@@ -306,7 +305,9 @@ namespace TagManager.ViewModel
 
             var s = folder.Split('\\');
             var ss = s.Skip(s.Length -2);
-            _holder = $"...\\{ss.FirstOrDefault()}\\{ss.LastOrDefault()}";
+            var enumerable = ss.ToList();
+
+            _holder = $"...\\{enumerable.FirstOrDefault()}\\{enumerable.LastOrDefault()}";
 
             _id = id;
             _trackTag = new Tag(path);

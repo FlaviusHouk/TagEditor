@@ -1,4 +1,4 @@
-﻿namespace WebRequests
+﻿namespace TagManager.WebRequest
 {
 	public class DisplayDoc
 	{
