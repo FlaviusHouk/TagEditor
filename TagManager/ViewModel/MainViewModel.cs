@@ -263,6 +263,7 @@ namespace TagManager.ViewModel
         private bool _isInspecting;
         private int _max;
         private int _value;
+        private int _counterForID = 1;
 
         private async void SearchIsrcAsync()
         {
@@ -345,7 +346,7 @@ namespace TagManager.ViewModel
         private Task InspectFolders(IEnumerable<string> selectedFolders)
         {
             var enumerable = selectedFolders.ToList();
-
+            _counterForID = 1;
             IsInsp = true;
             Max = selectedFolders.Select(o => Directory.GetFiles(o, "*.mp3", SearchOption.TopDirectoryOnly).Count()).Sum();
             return Task.Run(() =>
