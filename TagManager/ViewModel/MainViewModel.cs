@@ -392,6 +392,7 @@ namespace TagManager.ViewModel
 
                  });
                  System.Diagnostics.Debug.WriteLine("end   " + (DateTime.Now - date));
+                 IsInsp = false;
              });
         }
 

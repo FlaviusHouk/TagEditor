@@ -149,7 +149,7 @@ namespace TagManager.ViewModel
             {
                 return SelectedListFolders.Select(o => o.Path).ToArray();
             }
-            else if (SelectedTreeFolder !=null)
+            else if (SelectedTreeFolder != null)
             {
                 return new []{ SelectedTreeFolder.Path};
             }

@@ -19,6 +19,80 @@
     mc:Ignorable="d ignore">
 
     <Window.Resources>
+
+        <Style x:Key="ExpanderStyle" TargetType="Expander">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <!--  Control template for expander  -->
+                    <ControlTemplate x:Name="exp" TargetType="Expander">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Name="ContentRow" Height="0" />
+                            </Grid.RowDefinitions>
+                            <Border
+                                Name="border"
+                                Grid.Row="0"
+                                Background="{TemplateBinding Background}"
+                                BorderThickness="1"
+                                CornerRadius="4,4,0,0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton
+                                        x:Name="tb"
+                                        Grid.Column="0"
+                                        Background="Transparent"
+                                        Content="u"
+                                        FontFamily="Marlett"
+                                        FontSize="13"
+                                        Foreground="Black"
+                                        IsChecked="{Binding Path=IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ToggleButton.Style>
+                                            <Style TargetType="{x:Type ToggleButton}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ToggleButton">
+                                                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ToggleButton.Style>
+                                    </ToggleButton>
+                                    <ContentPresenter
+                                        x:Name="HeaderContent"
+                                        Grid.Column="1"
+                                        Margin="4"
+                                        ContentSource="Header"
+                                        RecognizesAccessKey="True" />
+                                </Grid>
+                            </Border>
+                            <Border
+                                x:Name="Content"
+                                Grid.Row="1"
+                                BorderThickness="1,0,1,1"
+                                CornerRadius="0,0,4,4">
+                                <ContentPresenter Margin="4" />
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ContentRow" Property="Height" Value="{Binding ElementName=Content, Path=Height}" />
+                                <Setter TargetName="tb" Property="Content" Value="t" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
         <CollectionViewSource x:Key="ItemsSource" Source="{Binding Tracks}">
             <CollectionViewSource.GroupDescriptions>
                 <PropertyGroupDescription PropertyName="Holder" />
@@ -136,7 +210,6 @@
         </EventTrigger>
     </controls:CustomWindow.Triggers>
 
-
     <DockPanel>
         <Border
             BorderBrush="{StaticResource MainBrush}"
@@ -162,16 +235,14 @@
                 <StackPanel
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
-                    Margin="5,10"
                     MaxWidth="300"
-                    HorizontalAlignment="Left"
-                    >
+                    Margin="5,10"
+                    HorizontalAlignment="Left">
                     <TextBlock
                         FontFamily="Italic"
                         FontSize="20"
-                        Text="{Binding TempTrack.Title}" 
-                        TextTrimming="CharacterEllipsis"
-                        />
+                        Text="{Binding TempTrack.Title}"
+                        TextTrimming="CharacterEllipsis" />
                     <TextBlock Text="{Binding TempTrack.Artist}" />
                 </StackPanel>
 
@@ -287,7 +358,7 @@
                     </TransformGroup>
                 </DockPanel.RenderTransform>
                 <DockPanel.InputBindings>
-                    <KeyBinding Gesture="Delete" Command="{Binding RemoveItemsCommand}"></KeyBinding>
+                    <KeyBinding Command="{Binding RemoveItemsCommand}" Gesture="Delete" />
                 </DockPanel.InputBindings>
                 <GroupBox
                     Width="300"
@@ -397,16 +468,25 @@
                     DockPanel.Dock="Top">
                     <Grid>
                         <StackPanel Orientation="Horizontal" Visibility="{Binding IsInsp, Converter={StaticResource AntiBoolToVisibilityConverter}}">
-                        <Button Command="{Binding OpenDialogCommand}">
-                            <Image
-                                Width="32"
-                                RenderOptions.BitmapScalingMode="HighQuality"
-                                Source="{StaticResource OpenImage}" />
-                         </Button>
+                            <Button Command="{Binding OpenDialogCommand}">
+                                <Image
+                                    Width="32"
+                                    RenderOptions.BitmapScalingMode="HighQuality"
+                                    Source="{StaticResource OpenImage}" />
+                            </Button>
                         </StackPanel>
                         <DockPanel LastChildFill="True" Visibility="{Binding IsInsp, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <TextBlock Height="16" DockPanel.Dock="Top" HorizontalAlignment="Center" Text="{Binding Progress}"/>
-                            <ProgressBar Height="26" Minimum="0" Value="{Binding Value}" Maximum="{Binding Max}" BorderThickness="0"></ProgressBar>
+                            <TextBlock
+                                Height="16"
+                                HorizontalAlignment="Center"
+                                DockPanel.Dock="Top"
+                                Text="{Binding Progress}" />
+                            <ProgressBar
+                                Height="26"
+                                BorderThickness="0"
+                                Maximum="{Binding Max}"
+                                Minimum="0"
+                                Value="{Binding Value}" />
                         </DockPanel>
                     </Grid>
                 </Border>
@@ -434,7 +514,7 @@
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                        <Expander>
+                                                        <Expander Style="{StaticResource ExpanderStyle}">
                                                             <Expander.Header>
                                                                 <TextBlock Text="{Binding Name}" />
                                                             </Expander.Header>
