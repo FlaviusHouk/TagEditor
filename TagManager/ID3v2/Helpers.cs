@@ -18,6 +18,12 @@ namespace ID3v2
                 toRet |= rawData[i];
             }
 
+            /*for (int i = 0; i < rawData.Length; i++)
+            {
+                toRet = toRet << 7;
+                toRet |= (rawData[i] & 127);
+            }*/
+
             return toRet;
         }
 

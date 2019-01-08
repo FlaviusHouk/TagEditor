@@ -49,6 +49,8 @@ x64/
 *.log
 *.scc
 
+*.mp3
+
 # OS generated files #
 .DS_Store*
 Icon?
