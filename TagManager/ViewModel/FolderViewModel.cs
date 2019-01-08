@@ -1,8 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using TagManager;
 
 namespace ViewModel
 {
@@ -10,6 +14,7 @@ namespace ViewModel
     {
         private bool _isSelected;
         private bool _isExpanded;
+        private bool _isLoadingChildren;
 
         public string Path
         {
@@ -20,6 +25,10 @@ namespace ViewModel
         {
             get
             {
+                if (Parent?.IsLoadingChildrens ?? false)
+                {
+                    return "Loading...";
+                }
                 var parts = Path.Split('\\');
 
                 return parts.Length >= 2 && !string.IsNullOrEmpty(parts.LastOrDefault()) ? (parts.LastOrDefault().Length > 40 ? $"{parts.LastOrDefault().Substring(0, 30)}..." : parts.LastOrDefault()) : parts.FirstOrDefault();
@@ -67,33 +76,64 @@ namespace ViewModel
             }
         }
 
-        public FolderViewModel(string path, FolderViewModel parent = null)
+        public FolderViewModel(string path, FolderViewModel parent = null, bool subFolders = true)
         {
             Path = path;
             Parent = parent;
-            if (!string.IsNullOrEmpty(path) && Directory.GetDirectories(Path).Any())
+            if (subFolders && !string.IsNullOrEmpty(path) && Directory.GetDirectories(Path).Any())
             {
                 SubFolders.Add(new FolderViewModel(string.Empty, this));
             }
         }
 
-        private void GetSubFolders(bool value)
+        private Task GetSubFolders(bool value)
         {
             if (value && SubFolders.Any(o => string.IsNullOrEmpty(o.FolderName)))
             {
+                IsLoadingChildrens = true;
                 SubFolders.Clear();
+                SubFolders.Add(new FolderViewModel(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), this, false));
                 var subfolders = Directory.GetDirectories(Path);
-                foreach (var item in subfolders)
+                var toSet = new List<FolderViewModel>();
+
+                return Task.Run(() =>
                 {
-                    try
+                    foreach (var item in subfolders)
                     {
-                        SubFolders.Add(new FolderViewModel(item, this));
+                        try
+                        {
+                            toSet.Add(new FolderViewModel(item, this));
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
                     }
-                    catch (Exception)
+                    IsLoadingChildrens = false;
+
+                    App.Current.Dispatcher.Invoke(() =>
                     {
-                        // ignored
-                    }
-                }
+                        SubFolders.Clear();
+                        foreach (var folder in toSet)
+                        {
+                            SubFolders.Add(folder);
+                        }
+
+                    });
+                });
+
+            }
+
+            return null;
+        }
+
+        public bool IsLoadingChildrens
+        {
+            get { return _isLoadingChildren; }
+            set
+            {
+                _isLoadingChildren = value;
+                RaisePropertyChanged(nameof(IsLoadingChildrens));
             }
         }
 

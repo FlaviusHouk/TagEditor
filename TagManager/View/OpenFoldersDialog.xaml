@@ -89,11 +89,15 @@
                 </i:Interaction.Triggers>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Path=SubFolders}">
-                        <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <StackPanel
+                            VerticalAlignment="Center"
+                            IsEnabled="{Binding Parent.IsLoadingChildrens}"
+                            Orientation="Horizontal">
                             <Image
                                 Width="25"
                                 RenderOptions.BitmapScalingMode="HighQuality"
-                                Source="{StaticResource FolderImage}" />
+                                Source="{StaticResource FolderImage}"
+                                Visibility="{Binding Parent.IsLoadingChildrens, Converter={StaticResource AntiBoolToVisibilityConverter}}" />
                             <TextBlock
                                 Margin="5,0,0,0"
                                 VerticalAlignment="Center"
@@ -128,7 +132,8 @@
         <Grid
             Grid.Row="1"
             Grid.Column="2"
-            MinWidth="200">
+            MinWidth="200"
+            Visibility="{Binding SelectedTreeFolder.IsLoadingChildrens, Converter={StaticResource AntiBoolToVisibilityConverter}}">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"

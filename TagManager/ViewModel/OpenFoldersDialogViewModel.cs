@@ -55,7 +55,7 @@ namespace TagManager.ViewModel
 
         public bool CanOK
         {
-            get { return SelectedListFolders.Any() || SelectedTreeFolder !=null; }
+            get { return SelectedListFolders.Any() && !SelectedListFolders.Any(x => x.IsLoadingChildrens) || SelectedTreeFolder !=null && (!SelectedTreeFolder.IsLoadingChildrens); }
         }
 
         public bool HasItem
